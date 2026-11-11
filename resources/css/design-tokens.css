@@ -1,0 +1,503 @@
+/* ============================================================================
+   OBSIDIAN SIGNAL — DESIGN TOKENS
+   Single source of truth for every design decision in this project.
+   Owner: DESIGN_SYSTEM.md  ·  Consumed by: resources/css/app.css (@theme bridge)
+
+   CONTRACT
+   ---------
+   1. No raw hex, px, or ms values are permitted anywhere outside this file.
+      Every other stylesheet/component MUST reference a token below.
+   2. Dark and light mode are carried BY the token via `light-dark()`.
+      Components therefore need almost no `dark:` variants. If you are writing
+      a `dark:` utility, first check whether a token should exist instead.
+   3. Mode is driven by the CSS `color-scheme` property:
+        :root                  -> follows the OS (default)
+        [data-theme="dark"]    -> forced dark
+        [data-theme="light"]   -> forced light
+      A ~0.3KB inline script in <head> sets data-theme before first paint so
+      there is no flash of incorrect theme. Dark is the brand-default fallback.
+   4. Token NAMES are the public API. Renaming a token is a breaking change.
+      Adding a token is fine. Do not fork values into local variables.
+
+   BROWSER BASELINE (required for light-dark())
+   Chrome/Edge 123+, Safari 17.5+, Firefox 120+  ·  all shipped 2024.
+   ========================================================================= */
+
+/* ============================================================================
+   1. MODE DRIVER
+   ========================================================================= */
+:root {
+  color-scheme: dark light; /* UA resolves from OS preference */
+}
+
+[data-theme='dark']  { color-scheme: dark; }
+[data-theme='light'] { color-scheme: light; }
+
+:root {
+  /* ==========================================================================
+     2. BRAND — the signal spectrum.
+     Cyan is the primary signal (interactive + informational).
+     Blue is the structural secondary (fills, gradients, depth) — NOT a text
+     colour in dark mode: #3678FF is only 4.13:1 on --color-surface-elevated.
+     Lime is the accent — reserved for a single emphasis per viewport.
+     ========================================================================== */
+  --color-brand-primary:          light-dark(#00707F, #00D4FF); /* 5.79:1 / 10.99:1 */
+  --color-brand-primary-hover:    light-dark(#005C69, #33DEFF);
+  --color-brand-primary-active:   light-dark(#004A55, #00A6C9);
+  --color-brand-primary-text:     light-dark(#00707F, #00D4FF); /* text-safe both modes */
+  --color-brand-primary-surface:  light-dark(#E0EEF0, #0F313C); /* tint 4.87:1 / 7.78:1 */
+
+  --color-brand-secondary:         light-dark(#2159D8, #3678FF); /* fill/gradient only */
+  --color-brand-secondary-text:    light-dark(#2159D8, #4A8CFF); /* text 6.03:1 / 6.01:1 */
+  --color-brand-secondary-solid:   light-dark(#2159D8, #2A5FD6); /* w/ white 6.03 / 5.67 */
+  --color-brand-secondary-hover:   light-dark(#1B4AB8, #3568E0); /* w/ white 7.73 / 4.99 */
+  --color-brand-secondary-surface: light-dark(#E4EAFB, #12203E);
+
+  --color-brand-accent:            light-dark(#4F6B00, #C6F277); /* text 5.75:1 / 15.17:1 */
+  --color-brand-accent-strong:     light-dark(#3F5600, #D6F79A);
+  --color-brand-accent-surface:    light-dark(#EAEDE0, #2A3120); /* 5.15:1 / 12.7:1 */
+  --color-brand-accent-solid:      light-dark(#BFE85C, #C6F277); /* light in BOTH modes */
+  --color-brand-accent-solid-hover: #D6F79A;                     /* kept light: text is dark */
+
+  /* --- Text colour for solid (filled) controls ------------------------------
+     A solid fill's luminance decides which text colour it can carry. Getting
+     this wrong is the single most common contrast bug, so each family declares
+     its own token instead of reusing a generic "inverse".
+       primary  : dark teal (light) / bright cyan (dark) -> flips per mode
+       danger   : dark red  (light) / light red  (dark)  -> flips per mode
+       secondary: dark blue in BOTH modes               -> always white
+       accent   : light lime in BOTH modes              -> always dark
+     Verified: 10.99 / 5.79 (primary), 6.74 / 5.44 (danger),
+               5.67 / 6.03 (secondary), 15.17 / 13.82 (accent).              */
+  --color-text-on-solid:     light-dark(#FFFFFF, #0B0D10);
+  --color-text-on-secondary: #FFFFFF;
+  --color-text-on-accent:    #0B0D10;
+
+  /* ==========================================================================
+     3. SURFACES — elevation is expressed by surface + border, not by shadow.
+     Dark mode steps UP in luminance; light mode steps up in whiteness.
+     ========================================================================== */
+  --color-background:        light-dark(#F7F8FA, #0B0D10); /* page canvas */
+  --color-background-subtle: light-dark(#EFF1F5, #08090B); /* alternating bands */
+  --color-surface:           light-dark(#FFFFFF, #12161C); /* cards, panels */
+  --color-surface-elevated:  light-dark(#FFFFFF, #1A2028); /* modals, popovers, menus */
+  --color-surface-inset:     light-dark(#F0F2F6, #08090B); /* code blocks, terminal */
+  --color-surface-input:     light-dark(#FFFFFF, #0E1116); /* form control fill */
+  --color-surface-hover:     light-dark(#F3F5F8, #171C23);
+  --color-surface-active:    light-dark(#EAEDF2, #1F262F);
+  --color-surface-disabled:  light-dark(#F1F3F6, #14181E);
+  --color-surface-inverse:   light-dark(#0B0D10, #F2F4F7);
+
+  /* ==========================================================================
+     4. TEXT — verified WCAG ratios vs background / surface / elevated (dark)
+                             and vs background / surface (light)
+     ========================================================================== */
+  --color-text-primary:    light-dark(#0B0D10, #F2F4F7); /* 18.31:1 | 17.66:1 */
+  --color-text-secondary:  light-dark(#5A6472, #89939F); /*  5.65:1 |  6.24:1 */
+  --color-text-tertiary:   light-dark(#6E7887, #84909C); /*  4.21:1*|  5.98:1 */
+  --color-text-disabled:   light-dark(#A0AAB6, #565F6D); /* exempt from 1.4.3 */
+  --color-text-inverse:    light-dark(#F2F4F7, #0B0D10); /* on inverse surfaces */
+  --color-text-on-brand:   light-dark(#FFFFFF, #0B0D10); /* on --color-brand-primary */
+  --color-text-link:       light-dark(#00707F, #00D4FF);
+  --color-text-link-hover: light-dark(#005C69, #33DEFF);
+
+  /* * --color-text-tertiary on LIGHT backgrounds is 4.21:1 (AA-large only).
+       RULE: in light mode, tertiary is permitted only for >=18.66px bold or
+       >=24px text, or for non-essential metadata. Essential body copy and any
+       text a user must read MUST use --color-text-secondary or above. */
+
+  /* ==========================================================================
+     5. BORDERS
+     --color-border        decorative hairline. NOT contrast-bearing (1.2-1.8:1).
+                           Legal for dividers and same-surface card edges ONLY.
+     --color-border-strong contrast-bearing. WCAG 1.4.11 compliant (>=3:1):
+                           dark 3.83 / 3.57 / 3.22 — light 3.24 / 3.44.
+                           MANDATORY for form controls, checkboxes, toggles,
+                           focusable boundaries, and any control whose shape
+                           must be perceivable.
+     ========================================================================== */
+  --color-border:          light-dark(#DDE2E8, #343D49);
+  --color-border-strong:   light-dark(#828B99, #656F7E);
+  --color-border-input:    var(--color-border-strong);
+  --color-border-subtle:   light-dark(#E9ECF1, #232A33);
+  --color-border-inverse:  light-dark(#0B0D10, #F2F4F7);
+  --color-border-brand:    var(--color-brand-primary);
+  --color-border-danger:   light-dark(#C0373F, #F16F75);
+
+  /* ==========================================================================
+     6. SEMANTIC STATUS
+     Each status exposes: base (text/icon), surface (tint), border, solid.
+     Verified pairs — dark tint @14% into #12161C, light tint @12% into #FFFFFF.
+     ========================================================================== */
+  --color-success:         light-dark(#2F6B21, #A3D977); /* 6.09:1 | 11.81:1 */
+  --color-success-surface: light-dark(#E6EDE4, #263129); /* 5.42:1 |  8.21:1 */
+  --color-success-border:  light-dark(#B9CDB2, #3C4F3F);
+  --color-success-solid:   light-dark(#2F6B21, #A3D977);
+
+  --color-warning:         light-dark(#8A5A00, #F4BE5E); /* 5.58:1 | 11.46:1 */
+  --color-warning-surface: light-dark(#F1EBE0, #322E25); /* 5.00:1 |  7.97:1 */
+  --color-warning-border:  light-dark(#DBC9A3, #4D4433);
+  --color-warning-solid:   light-dark(#F4BE5E, #F4BE5E);
+
+  --color-danger:          light-dark(#C0373F, #F16F75); /* 5.12:1 |  6.74:1 */
+  --color-danger-surface:  light-dark(#F7E7E8, #312228); /* 4.55:1 |  5.23:1 */
+  --color-danger-border:   light-dark(#E5B9BC, #4E3539);
+  --color-danger-solid:    light-dark(#C0373F, #F16F75);
+  /* Distinct hover: the base value would produce no visible state change.
+     Verified with --color-text-on-solid: 6.75 / 8.25. */
+  --color-danger-solid-hover: light-dark(#A82E36, #F58A8E);
+
+  --color-info:            light-dark(#00707F, #00D4FF); /* 5.45:1 | 10.99:1 */
+  --color-info-surface:    light-dark(#E0EEF0, #0F313C); /* 4.87:1 |  7.78:1 */
+  --color-info-border:     light-dark(#AFCCD2, #2A4C58);
+  --color-info-solid:      light-dark(#00707F, #00D4FF);
+
+  /* Neutral status — drafts, archived, inactive */
+  --color-neutral:         light-dark(#5A6472, #89939F);
+  --color-neutral-surface: light-dark(#F0F2F6, #1F262F);
+  --color-neutral-border:  light-dark(#CDD4DD, #3A434F);
+
+  /* ==========================================================================
+     7. GRADIENTS, GLOW, OVERLAY, SHADOW-COLOUR
+     Gradients are structural, never decorative noise. Two are sanctioned.
+     ========================================================================== */
+  --gradient-signal: linear-gradient(115deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
+  --gradient-depth:  linear-gradient(180deg, var(--color-surface) 0%, var(--color-background) 100%);
+  --gradient-fade-x: linear-gradient(90deg, transparent, var(--color-border), transparent);
+
+  --color-glow-brand: light-dark(rgba(0, 112, 127, 0.18), rgba(0, 212, 255, 0.22));
+
+  --color-overlay:       light-dark(rgba(11, 13, 16, 0.44), rgba(3, 4, 6, 0.72));
+  --color-overlay-heavy: light-dark(rgba(11, 13, 16, 0.62), rgba(3, 4, 6, 0.86));
+
+  /* Text sitting ON an overlay scrim (image captions, hero media labels).
+     The scrim is dark in both modes, so this is always light and never
+     borrowed from --color-text-on-* — those track a fill, not a scrim. */
+  --color-text-on-overlay: #FFFFFF;
+
+  /* Shadow composition — colour is mode-aware, geometry is not. */
+  --color-shadow:      light-dark(rgba(11, 13, 16, 0.08), rgba(0, 0, 0, 0.56));
+  --color-shadow-deep: light-dark(rgba(11, 13, 16, 0.14), rgba(0, 0, 0, 0.72));
+
+  /* ==========================================================================
+     8. TYPOGRAPHY
+     Three families, each with ONE job. Adding a fourth family is a design
+     decision that requires updating DESIGN_SYSTEM.md first.
+       --font-display    Geist            : headings, UI, numerals (premium tech)
+       --font-mono       Geist Mono       : code, data, technical micro-labels
+       --font-editorial  Instrument Serif : editorial pull-quotes, index numerals
+     ========================================================================== */
+  --font-display: 'Geist Variable', 'Geist', ui-sans-serif, system-ui, 'Segoe UI',
+                  -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: var(--font-display); /* same family; weight + tracking contrast */
+  --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'JetBrains Mono',
+               'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  --font-editorial: 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype',
+                    Georgia, serif;
+
+  /* Type scale — fluid, 320px -> 1440px, generated (not hand-guessed).
+     Each clamp is linear between those viewports and pins at both ends. */
+  --text-display-2xl: clamp(2.75rem, 5.3571vw + 1.6786rem, 6.5rem);     /*  44 -> 104px */
+  --text-display-xl:  clamp(2.375rem, 3.9286vw + 1.5893rem, 5.125rem);  /*  38 ->  82px */
+  --text-display-lg:  clamp(2.0625rem, 2.7679vw + 1.5089rem, 4rem);     /*  33 ->  64px */
+  --text-display-md:  clamp(1.75rem, 1.7857vw + 1.3929rem, 3rem);       /*  28 ->  48px */
+  --text-heading-xl:  clamp(1.6875rem, 1.1607vw + 1.4554rem, 2.5rem);   /*  27 ->  40px */
+  --text-heading-lg:  clamp(1.4375rem, 0.8036vw + 1.2768rem, 2rem);     /*  23 ->  32px */
+  --text-heading-md:  clamp(1.25rem, 0.5357vw + 1.1429rem, 1.625rem);   /*  20 ->  26px */
+  --text-heading-sm:  clamp(1.0625rem, 0.3571vw + 0.9911rem, 1.3125rem);/*  17 ->  21px */
+  --text-body-lg:     clamp(1.0625rem, 0.1786vw + 1.0268rem, 1.1875rem);/*  17 ->  19px */
+  --text-body-md:     clamp(1rem, 0.0893vw + 0.9821rem, 1.0625rem);     /*  16 ->  17px */
+  --text-body-sm:     clamp(0.875rem, 0.0893vw + 0.8571rem, 0.9375rem); /*  14 ->  15px */
+  --text-caption:     clamp(0.8125rem, 0.0893vw + 0.7946rem, 0.875rem); /*  13 ->  14px */
+  --text-micro:       clamp(0.6875rem, 0.0893vw + 0.6696rem, 0.75rem);  /*  11 ->  12px */
+
+  /* Line heights — paired 1:1 with the scale above. Tighter as type grows. */
+  --leading-display-2xl: 0.94;
+  --leading-display-xl:  0.96;
+  --leading-display-lg:  1;
+  --leading-display-md:  1.04;
+  --leading-heading-xl:  1.1;
+  --leading-heading-lg:  1.16;
+  --leading-heading-md:  1.22;
+  --leading-heading-sm:  1.32;
+  --leading-body-lg:     1.6;
+  --leading-body-md:     1.62;
+  --leading-body-sm:     1.58;
+  --leading-caption:     1.5;
+  --leading-micro:       1.42;
+
+  /* Tracking — optical correction. Large type tightens, micro type opens. */
+  --tracking-display: -0.032em;
+  --tracking-heading: -0.02em;
+  --tracking-body:    -0.006em;
+  --tracking-tight:   -0.01em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.02em;
+  --tracking-label:   0.085em; /* uppercase mono micro-labels */
+
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ==========================================================================
+     9. SPACING — 4px base, plus a 2px "engineering" step for hairline detail.
+     ========================================================================== */
+  --space-0:   0;
+  --space-0-5: 0.125rem; /*   2px */
+  --space-1:   0.25rem;  /*   4px */
+  --space-2:   0.5rem;   /*   8px */
+  --space-3:   0.75rem;  /*  12px */
+  --space-4:   1rem;     /*  16px */
+  --space-5:   1.25rem;  /*  20px */
+  --space-6:   1.5rem;   /*  24px */
+  --space-7:   1.75rem;  /*  28px */
+  --space-8:   2rem;     /*  32px */
+  --space-10:  2.5rem;   /*  40px */
+  --space-12:  3rem;     /*  48px */
+  --space-14:  3.5rem;   /*  56px */
+  --space-16:  4rem;     /*  64px */
+  --space-20:  5rem;     /*  80px */
+  --space-24:  6rem;     /*  96px */
+  --space-32:  8rem;     /* 128px */
+  --space-40:  10rem;    /* 160px */
+
+  /* Fluid section rhythm — vertical breathing room that scales with viewport */
+  --space-section-y:    clamp(3.5rem, 7vw, 8rem);
+  --space-section-y-sm: clamp(2.5rem, 4vw, 4.5rem);
+
+  --space-hairline: 1px;
+  --space-gutter:   clamp(1rem, 3vw, 2rem);
+
+  /* ==========================================================================
+     10. RADIUS & CHAMFER
+     --radius-* is the standard rounding scale.
+     --chamfer-* is the SIGNATURE neo-industrial clipped corner, used on
+     elevated/feature surfaces so the design is recognisable. A chamfered
+     surface NEVER also takes a large radius on the same corner.
+     ========================================================================== */
+  --radius-none: 0;
+  --radius-xs:   0.25rem;  /*   4px */
+  --radius-sm:   0.375rem; /*   6px */
+  --radius-md:   0.625rem; /*  10px */
+  --radius-lg:   0.875rem; /*  14px */
+  --radius-xl:   1.25rem;  /*  20px */
+  --radius-2xl:  1.75rem;  /*  28px */
+  --radius-full: 9999px;
+
+  --chamfer-sm: 0.5rem; /*  8px notch */
+  --chamfer-md: 1rem;   /* 16px notch */
+  --chamfer-lg: 1.5rem; /* 24px notch */
+
+  /* ==========================================================================
+     11. ELEVATION
+     Elevation is a THREE-part system: surface step + border + shadow.
+     Shadow alone is insufficient in dark mode, so a shadow token MUST always
+     be paired with a surface change. See DESIGN_SYSTEM.md section 12.
+     ========================================================================== */
+  --shadow-none: none;
+  --shadow-e1: 0 1px 2px 0 var(--color-shadow);
+  --shadow-e2: 0 2px 4px -1px var(--color-shadow), 0 1px 2px 0 var(--color-shadow);
+  --shadow-e3: 0 8px 16px -4px var(--color-shadow), 0 2px 4px -2px var(--color-shadow);
+  --shadow-e4: 0 20px 32px -12px var(--color-shadow-deep), 0 4px 8px -4px var(--color-shadow);
+  --shadow-e5: 0 32px 64px -20px var(--color-shadow-deep), 0 8px 16px -8px var(--color-shadow);
+  --shadow-inset: inset 0 1px 0 0 var(--color-shadow);
+  --shadow-glow: 0 0 0 1px var(--color-brand-primary), 0 0 24px 0 var(--color-glow-brand);
+
+  /* Focus ring — WCAG 1.4.11 verified >=3:1 vs the surface it lands on.
+     Always applied as an OUTLINE so it never shifts layout. */
+  --focus-width:  2px;
+  --focus-offset: 2px;
+  --color-focus-ring: light-dark(#00707F, #00D4FF); /* 5.45:1 | 10.99:1 */
+  --shadow-focus: 0 0 0 var(--focus-offset) var(--color-background),
+                  0 0 0 calc(var(--focus-offset) + var(--focus-width)) var(--color-focus-ring);
+
+  /* ==========================================================================
+     12. MOTION
+     Every animation must be justified: it must communicate state, hierarchy,
+     or causality. Decorative motion is prohibited.
+     ========================================================================== */
+  --duration-instant: 80ms;
+  --duration-fast:    150ms;
+  --duration-normal:  250ms;
+  --duration-slow:    400ms;
+  --duration-slower:  700ms;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);        /* default UI motion */
+  --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);     /* enter / reveal */
+  --ease-in:       cubic-bezier(0.4, 0, 1, 1);        /* exit / dismiss */
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1); /* confirm / success */
+
+  --transition-fast:   var(--duration-fast) var(--ease-standard);
+  --transition-normal: var(--duration-normal) var(--ease-standard);
+  --transition-slow:   var(--duration-slow) var(--ease-out);
+
+  --motion-lift:         translateY(-2px);
+  --motion-distance-sm:  0.5rem;
+  --motion-distance-md:  1rem;
+  --motion-stagger-step: 60ms; /* cap any cascade at 6 items */
+
+  /* ==========================================================================
+     13. LAYOUT
+     ========================================================================== */
+  --container-narrow:  45rem;   /*  720px — long-form reading (articles) */
+  --container-default: 82.5rem; /* 1320px — primary page container */
+  --container-wide:    100rem;  /* 1600px — galleries, CMS dashboards */
+  --container-content: 65ch;    /* prose measure cap — never exceed for body */
+
+  --grid-columns: 12;
+  --grid-gap: clamp(1rem, 2.2vw, 2rem);
+
+  --header-height:           4.5rem; /* 72px — desktop nav */
+  --header-height-sm:        3.5rem; /* 56px — mobile nav */
+  --sidebar-width:           16.5rem; /* 264px — CMS admin rail */
+  --sidebar-width-collapsed: 4rem;
+
+  /* z-index — all stacking must use these. Raw z-index values are banned. */
+  --z-below:    -1;
+  --z-base:      0;
+  --z-raised:    10;
+  --z-sticky:   100;
+  --z-dropdown: 200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+  --z-tooltip:  600;
+
+  /* ==========================================================================
+     14. ICONOGRAPHY
+     Lucide, stroke-only, 1.5px stroke, currentColor.
+     See DESIGN_SYSTEM.md section 13 for the full standard.
+     ========================================================================== */
+  --icon-size-xs:  0.75rem; /* 12px — inline with micro label */
+  --icon-size-sm:  1rem;    /* 16px — default, inline with body text */
+  --icon-size-md:  1.25rem; /* 20px — buttons, list items */
+  --icon-size-lg:  1.5rem;  /* 24px — nav, section headers */
+  --icon-size-xl:  2rem;    /* 32px — feature cards */
+  --icon-size-2xl: 2.5rem;  /* 40px — empty states, hero accents */
+  --icon-stroke-width:      1.5;
+  --icon-stroke-width-bold: 2;
+
+  /* ==========================================================================
+     15. TEXTURE — the "signal" surface treatment.
+     Grain and grid are atmosphere, never content. Hard opacity ceilings apply.
+     ========================================================================== */
+  --texture-grain-opacity:    0.035; /* ceiling 0.05 — higher dirties text */
+  --texture-grid-opacity:     0.045; /* ceiling 0.06 */
+  --texture-grid-size:        5rem;
+  --texture-scanline-opacity: 0.025;
+  --texture-grid-color:       light-dark(#5A6472, #F2F4F7);
+  /* mask-image colour stops act as ALPHA CARRIERS, not as design colours.
+     Declared here so no raw hex has to appear in a component file. */
+  --texture-mask-solid: #000;
+
+  /* ==========================================================================
+     16. BREAKPOINTS
+     Tailwind values are literal --breakpoint-* entries in an @theme block.
+     because CSS variables cannot be used in @media conditions.
+     
+     Tailwind writes these values into valid media-query conditions.
+     ========================================================================== */
+
+  /* ==========================================================================
+     17. COMPONENT GEOMETRY
+     Shared control dimensions. A component must size itself from these so
+     every control in the product has identical rhythm and hit-area.
+     ========================================================================== */
+  --control-height-xs: 1.75rem; /* 28px */
+  --control-height-sm: 2rem;    /* 32px */
+  --control-height-md: 2.5rem;  /* 40px — default */
+  --control-height-lg: 3rem;    /* 48px */
+  --control-height-xl: 3.5rem;  /* 56px — hero CTA */
+
+  --control-padding-x-xs: var(--space-2);
+  --control-padding-x-sm: var(--space-3);
+  --control-padding-x-md: var(--space-4);
+  --control-padding-x-lg: var(--space-5);
+  --control-padding-x-xl: var(--space-6);
+
+  --badge-height-sm: 1.25rem;
+  --badge-height-md: 1.5rem;
+
+  --table-row-height:    3rem;
+  --table-header-height: 2.75rem;
+
+  --avatar-size-sm: 1.75rem;
+  --avatar-size-md: 2.25rem;
+  --avatar-size-lg: 3rem;
+  --avatar-size-xl: 5rem;
+
+  --media-radius:    var(--radius-md);
+  --prose-max-width: var(--container-content);
+
+  --border-width-hairline: 1px;
+  --border-width-medium:   2px;
+  --border-width-heavy:    4px; /* neo-industrial accent rule */
+
+  --scrollbar-size:        0.625rem;
+  --scrollbar-thumb:       light-dark(#C3CAD3, #3A434F);
+  --scrollbar-thumb-hover: light-dark(#AEB7C2, #4E5866);
+}
+
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-xs: 30rem;
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+  --breakpoint-3xl: 110rem;
+}
+
+/* ============================================================================
+   18. ACCESSIBILITY OVERRIDES (global, not component-scoped)
+   ========================================================================= */
+
+/* Honor the OS "reduce motion" setting. Motion is removed, not merely slowed. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0.01ms;
+    --duration-fast:    0.01ms;
+    --duration-normal:  0.01ms;
+    --duration-slow:    0.01ms;
+    --duration-slower:  0.01ms;
+    --motion-lift:         none;
+    --motion-distance-sm:  0;
+    --motion-distance-md:  0;
+    --motion-stagger-step: 0ms;
+  }
+}
+
+/* Increased contrast: promote hairlines to contrast-bearing values. */
+@media (prefers-contrast: more) {
+  :root {
+    --color-border:         var(--color-border-strong);
+    --color-border-subtle:  var(--color-border-strong);
+    --color-text-secondary: var(--color-text-primary);
+  }
+}
+
+/* ============================================================================
+   19. MODE-VARIANT NON-COLOUR TOKENS
+   Shadows that cannot use light-dark() (they are not <color> values) are
+   composed from mode-aware shadow colours above, with per-mode geometry here.
+   Kept deliberately minimal — every other token is already mode-aware.
+   ========================================================================= */
+[data-theme='light'] {
+  --shadow-e1: 0 1px 2px 0 var(--color-shadow);
+  --shadow-e2: 0 2px 4px -1px var(--color-shadow), 0 1px 2px 0 var(--color-shadow);
+  --shadow-e3: 0 8px 16px -4px var(--color-shadow), 0 2px 4px -2px var(--color-shadow);
+  --shadow-e4: 0 20px 32px -12px var(--color-shadow-deep), 0 4px 8px -4px var(--color-shadow);
+  --shadow-e5: 0 32px 64px -20px var(--color-shadow-deep), 0 8px 16px -8px var(--color-shadow);
+  --shadow-inset: inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+}
+
+[data-theme='dark'] {
+  --shadow-e1: 0 1px 2px 0 var(--color-shadow);
+  --shadow-e2: 0 2px 4px -1px var(--color-shadow), 0 1px 2px 0 var(--color-shadow);
+  --shadow-e3: 0 8px 20px -6px var(--color-shadow), 0 2px 6px -2px var(--color-shadow);
+  --shadow-e4: 0 24px 40px -14px var(--color-shadow-deep), 0 6px 12px -6px var(--color-shadow);
+  --shadow-e5: 0 40px 72px -24px var(--color-shadow-deep), 0 10px 20px -10px var(--color-shadow);
+  --shadow-inset: inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+}

@@ -1,0 +1,45 @@
+name: CI
+
+on:
+    push:
+    pull_request:
+
+jobs:
+    quality:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: curl, dom, fileinfo, gd, intl, mbstring, openssl, pdo_mysql, pdo_sqlite, sqlite3, zip
+                  coverage: none
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+
+            - name: Install PHP dependencies
+              run: composer install --no-interaction --prefer-dist
+
+            - name: Install Node dependencies
+              run: npm ci
+
+            - name: Build assets
+              run: npm run build
+
+            - name: Check formatting
+              run: composer lint
+
+            - name: Run static analysis
+              run: composer analyse
+
+            - name: Run tests
+              run: composer test
+
+            - name: Validate design foundation
+              run: node _validate.mjs

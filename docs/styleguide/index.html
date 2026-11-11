@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OBSIDIAN SIGNAL — Component Showcase</title>
+<meta name="robots" content="noindex, nofollow" />
+<meta name="description" content="Internal style guide. Verifies every design token and component in the OBSIDIAN SIGNAL design system." />
+
+<!-- Theme must resolve BEFORE first paint or the page flashes the wrong mode. -->
+<script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('os-theme');
+      if (stored === 'light' || stored === 'dark') {
+        document.documentElement.setAttribute('data-theme', stored);
+      } else {
+        document.documentElement.removeAttribute('data-theme'); // follow OS
+      }
+    } catch (e) { /* private mode — OS preference still applies via color-scheme */ }
+  })();
+</script>
+
+<style>
+  /* Style Guide chrome only. It deliberately uses the same tokens as the product
+     so that any token regression becomes visible here first. */
+  .sg-layout { display: grid; grid-template-columns: 15rem minmax(0, 1fr); }
+  .sg-rail {
+    position: sticky; inset-block-start: 0; block-size: 100vh; overflow-y: auto;
+    padding: var(--space-6) var(--space-4);
+    border-right: var(--border-width-hairline) solid var(--color-border);
+    background-color: var(--color-background-subtle);
+  }
+  .sg-rail__link {
+    display: block; padding: var(--space-1) var(--space-3); border-radius: var(--radius-xs);
+    color: var(--color-text-secondary); font-size: var(--text-caption); text-decoration: none;
+  }
+  .sg-rail__link:hover { background-color: var(--color-surface-hover); color: var(--color-text-primary); }
+  .sg-section { padding-block: var(--space-12); border-bottom: var(--border-width-hairline) solid var(--color-border); }
+  .sg-swatch { height: 4.5rem; border-radius: var(--radius-sm); border: var(--border-width-hairline) solid var(--color-border); }
+  .sg-spec { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); }
+  .sg-cell {
+    display: flex; flex-direction: column; gap: var(--space-2);
+    padding: var(--space-4); border: var(--border-width-hairline) solid var(--color-border);
+    border-radius: var(--radius-sm); background-color: var(--color-surface);
+  }
+  .sg-grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--space-4); }
+  .sg-space-bar { height: 1rem; background-color: var(--color-brand-primary-surface); border-left: var(--border-width-medium) solid var(--color-brand-primary); }
+  .sg-checker {
+    background-image:
+      linear-gradient(45deg, var(--color-surface-hover) 25%, transparent 25%, transparent 75%, var(--color-surface-hover) 75%),
+      linear-gradient(45deg, var(--color-surface-hover) 25%, transparent 25%, transparent 75%, var(--color-surface-hover) 75%);
+    background-size: 1rem 1rem; background-position: 0 0, 0.5rem 0.5rem;
+  }
+  @media (max-width: 63.999rem) { .sg-layout { grid-template-columns: minmax(0, 1fr); } .sg-rail { display: none; } }
+</style>
+
+<link rel="stylesheet" href="../../resources/css/design-tokens.css" />
+<link rel="stylesheet" href="../../resources/css/components.css" />
+</head>
+<body class="os-root os-grain">
+
+<a class="os-skip-link" href="#main">Skip to content</a>
+
+<div class="sg-layout">
+  <aside class="sg-rail" aria-label="Section navigation">
+    <p class="os-label">Style Guide</p>
+    <p class="os-heading-sm" style="margin:.25rem 0 1rem;">Obsidian Signal</p>
+    <nav class="os-stack os-stack--tight">
+      <a class="sg-rail__link" href="#tokens-color">Tokens — Colour</a>
+      <a class="sg-rail__link" href="#tokens-type">Tokens — Typography</a>
+      <a class="sg-rail__link" href="#tokens-space">Tokens — Spacing &amp; Radius</a>
+      <a class="sg-rail__link" href="#tokens-elevation">Tokens — Elevation</a>
+      <a class="sg-rail__link" href="#c-foundation">Foundation</a>
+      <a class="sg-rail__link" href="#c-buttons">Buttons</a>
+      <a class="sg-rail__link" href="#c-badges">Badges &amp; Icons</a>
+      <a class="sg-rail__link" href="#c-forms">Forms</a>
+      <a class="sg-rail__link" href="#c-cards">Cards &amp; Alerts</a>
+      <a class="sg-rail__link" href="#c-states">States</a>
+      <a class="sg-rail__link" href="#c-nav">Navigation</a>
+      <a class="sg-rail__link" href="#c-overlays">Overlays</a>
+      <a class="sg-rail__link" href="#c-table">Data Table</a>
+      <a class="sg-rail__link" href="#c-portfolio">Portfolio</a>
+      <a class="sg-rail__link" href="#c-cms">CMS</a>
+      <a class="sg-rail__link" href="#c-signature">Signature Devices</a>
+    </nav>
+    <hr class="os-divider" />
+    <button class="os-btn os-btn--outline os-btn--sm os-btn--block" type="button" id="theme-toggle">
+      Toggle theme
+    </button>
+    <p class="sg-spec" id="theme-state" style="margin-top:.5rem;"></p>
+  </aside>
+
+  <main id="main" class="os-container os-container--wide" style="padding-block: 0;">
+
+    <header class="os-section os-section--compact">
+      <div class="os-eyebrow"><span class="os-label os-label--brand">// Internal · Not shipped</span></div>
+      <h1 class="os-display-md" style="margin-block: var(--space-4) var(--space-3);">Component Showcase</h1>
+      <p class="os-text-lg os-text-secondary os-measure">
+        Rendered from the real <code class="os-mono">design-tokens.css</code> and
+        <code class="os-mono">components.css</code>. If something looks wrong here it is wrong
+        everywhere — fix the token, not the page.
+      </p>
+    </header>
+
+    <!-- ================= TOKENS: COLOUR ================= -->
+    <section class="sg-section" id="tokens-color">
+      <div class="os-eyebrow"><span class="os-label">01 · Tokens</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-2);">Colour</h2>
+      <p class="os-text-sm os-text-secondary os-measure">
+        Contrast ratios are measured, not estimated — dark figures against
+        <code class="os-mono">--color-background</code>, light figures against the same token.
+      </p>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Brand</h3>
+      <div class="sg-grid-auto">
+        <div class="sg-cell">
+          <div class="sg-swatch" style="background-color: var(--color-brand-primary);"></div>
+          <span class="os-text-sm">--color-brand-primary</span><span class="sg-spec">10.99:1 dark · 5.79:1 light</span>
+        </div>
+        <div class="sg-cell">
+          <div class="sg-swatch" style="background-color: var(--color-brand-secondary);"></div>
+          <span class="os-text-sm">--color-brand-secondary</span><span class="sg-spec">fill only · NOT text on elevated</span>
+        </div>
+        <div class="sg-cell">
+          <div class="sg-swatch" style="background-color: var(--color-brand-accent);"></div>
+          <span class="os-text-sm">--color-brand-accent</span><span class="sg-spec">15.17:1 dark · 5.75:1 light</span>
+        </div>
+        <div class="sg-cell">
+          <div class="sg-swatch" style="background-color: var(--gradient-signal);"></div>
+          <span class="os-text-sm">--gradient-signal</span><span class="sg-spec">structural only</span>
+        </div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Surfaces</h3>
+      <div class="sg-grid-auto">
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-background);"></div><span class="os-text-sm">--color-background</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-surface);"></div><span class="os-text-sm">--color-surface</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-surface-elevated);"></div><span class="os-text-sm">--color-surface-elevated</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-surface-inset);"></div><span class="os-text-sm">--color-surface-inset</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-background-subtle);"></div><span class="os-text-sm">--color-background-subtle</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-surface-inverse);"></div><span class="os-text-sm">--color-surface-inverse</span></div>
+      </div>
+    </section>
+
+    <section class="sg-section" id="tokens-color-2">
+      <h3 class="os-label" style="margin-block: 0 var(--space-4);">Text tokens</h3>
+      <div class="sg-cell">
+        <p style="color: var(--color-text-primary);">Primary 17.66:1 / 18.31:1 — body copy and headings</p>
+        <p style="color: var(--color-text-secondary);">Secondary 6.24:1 / 5.65:1 — supporting copy</p>
+        <p style="color: var(--color-text-tertiary);">Tertiary 5.98:1 dark / 4.21:1 light — micro labels only</p>
+        <p style="color: var(--color-text-disabled);">Disabled — exempt from WCAG 1.4.3, non-content</p>
+        <p><a class="os-link" href="#tokens-color">Link — token driven, underlined, 0.2em offset</a></p>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Semantic status</h3>
+      <div class="sg-grid-auto">
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-success);"></div><span class="os-text-sm">--color-success</span><span class="sg-spec">11.81:1 / 6.09:1</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-warning);"></div><span class="os-text-sm">--color-warning</span><span class="sg-spec">11.46:1 / 5.58:1</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-danger);"></div><span class="os-text-sm">--color-danger</span><span class="sg-spec">6.74:1 / 5.12:1</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="background-color: var(--color-info);"></div><span class="os-text-sm">--color-info</span><span class="sg-spec">10.99:1 / 5.45:1</span></div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Borders — the critical distinction</h3>
+      <div class="sg-grid-auto">
+        <div class="sg-cell">
+          <div class="sg-swatch" style="background: none; border: 1px solid var(--color-border);"></div>
+          <span class="os-text-sm">--color-border</span>
+          <span class="sg-spec">1.77:1 — DECORATIVE. Dividers + same-surface card edges.</span>
+        </div>
+        <div class="sg-cell">
+          <div class="sg-swatch" style="background: none; border: 1px solid var(--color-border-strong);"></div>
+          <span class="os-text-sm">--color-border-strong</span>
+          <span class="sg-spec">3.83:1 / 3.24:1 — WCAG 1.4.11. Required for all controls.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TOKENS: TYPOGRAPHY ================= -->
+    <section class="sg-section" id="tokens-type">
+      <div class="os-eyebrow"><span class="os-label">02 · Tokens</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Typography</h2>
+      <p class="os-text-sm os-text-secondary os-measure" style="margin-bottom: var(--space-8);">
+        Fluid scale — every size is a generated <code class="os-mono">clamp()</code> pinned at
+        320px and 1440px. Resize the window: minimum 11px, maximum 104px, never a jump.
+      </p>
+      <div class="os-stack os-stack--loose">
+        <div><p class="os-display-2xl">Display 2XL</p><span class="sg-spec">--text-display-2xl · 44 → 104px · leading .94 · tracking -.032em</span></div>
+        <div><p class="os-display-xl">Display XL</p><span class="sg-spec">--text-display-xl · 38 → 82px</span></div>
+        <div><p class="os-display-lg">Display LG</p><span class="sg-spec">--text-display-lg · 33 → 64px</span></div>
+        <div><p class="os-display-md">Display MD</p><span class="sg-spec">--text-display-md · 28 → 48px</span></div>
+        <div><p class="os-heading-xl">Heading XL</p><span class="sg-spec">--text-heading-xl · 27 → 40px</span></div>
+        <div><p class="os-heading-lg">Heading LG</p><span class="sg-spec">--text-heading-lg · 23 → 32px</span></div>
+        <div><p class="os-heading-md">Heading MD</p><span class="sg-spec">--text-heading-md · 20 → 26px</span></div>
+        <div><p class="os-heading-sm">Heading SM</p><span class="sg-spec">--text-heading-sm · 17 → 21px</span></div>
+        <div><p class="os-text-lg">Body LG — the reading size for long-form prose.</p><span class="sg-spec">--text-body-lg · 17 → 19px · leading 1.6</span></div>
+        <div><p>Body MD — the product default for UI copy.</p><span class="sg-spec">--text-body-md · 16 → 17px · leading 1.62</span></div>
+        <div><p class="os-text-sm">Body SM — dense UI: tables, forms, cards.</p><span class="sg-spec">--text-body-sm · 14 → 15px</span></div>
+        <div><p class="os-caption">Caption — metadata and helper text.</p><span class="sg-spec">--text-caption · 13 → 14px</span></div>
+        <div><span class="os-label">Micro label · mono · tracked · uppercase</span></div>
+      </div>
+      <div class="sg-cell" style="margin-top: var(--space-8);">
+        <p class="os-editorial">Editorial serif — the only place this family is permitted.</p>
+        <span class="os-index-numeral">07</span>
+        <span class="sg-spec">--font-editorial · max two uses per page</span>
+      </div>
+      <div class="sg-cell" style="margin-top: var(--space-4);">
+        <pre class="os-terminal__body" style="border:0; padding:0;">const token = 'mono for code and data';</pre>
+        <span class="sg-spec">--font-mono · tabular-nums for all data</span>
+      </div>
+    </section>
+
+    <!-- ================= TOKENS: SPACING / RADIUS ================= -->
+    <section class="sg-section" id="tokens-space">
+      <div class="os-eyebrow"><span class="os-label">03 · Tokens</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Spacing &amp; Radius</h2>
+      <p class="os-text-sm os-text-secondary os-measure" style="margin-bottom: var(--space-6);">
+        4px base plus a 2px engineering step. Tailwind's scale uses the same 0.25rem base,
+        so <code class="os-mono">p-4</code> and <code class="os-mono">--space-4</code> are
+        both 16px by construction.
+      </p>
+      <div class="sg-cell" style="margin-bottom: var(--space-8);">
+        <div class="os-stack os-stack--tight">
+          <div><div class="sg-space-bar" style="width: var(--space-1);"></div><span class="sg-spec">--space-1 · 4px</span></div>
+          <div><div class="sg-space-bar" style="width: var(--space-2);"></div><span class="sg-spec">--space-2 · 8px</span></div>
+          <div><div class="sg-space-bar" style="width: var(--space-4);"></div><span class="sg-spec">--space-4 · 16px</span></div>
+          <div><div class="sg-space-bar" style="width: var(--space-8);"></div><span class="sg-spec">--space-8 · 32px</span></div>
+          <div><div class="sg-space-bar" style="width: var(--space-16);"></div><span class="sg-spec">--space-16 · 64px</span></div>
+          <div><div class="sg-space-bar" style="width: var(--space-32);"></div><span class="sg-spec">--space-32 · 128px</span></div>
+        </div>
+        <span class="sg-spec">--space-section-y = clamp(3.5rem, 7vw, 8rem) — fluid section rhythm</span>
+      </div>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-4);">Radius vs Chamfer</h3>
+      <div class="sg-grid-auto">
+        <div class="sg-cell"><div class="sg-swatch" style="border-radius: var(--radius-xs);"></div><span class="os-text-sm">--radius-xs · 4px</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="border-radius: var(--radius-sm);"></div><span class="os-text-sm">--radius-sm · 6px</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="border-radius: var(--radius-md);"></div><span class="os-text-sm">--radius-md · 10px</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="border-radius: var(--radius-lg);"></div><span class="os-text-sm">--radius-lg · 14px</span></div>
+        <div class="sg-cell"><div class="sg-swatch" style="border-radius: var(--radius-full);"></div><span class="os-text-sm">--radius-full</span></div>
+        <div class="sg-cell"><div class="sg-swatch os-chamfer--sm" style="background-color: var(--color-brand-primary-surface); border:1px solid var(--color-border-brand);"></div><span class="os-text-sm">.os-chamfer--sm</span></div>
+        <div class="sg-cell"><div class="sg-swatch os-chamfer" style="background-color: var(--color-brand-primary-surface); border:1px solid var(--color-border-brand);"></div><span class="os-text-sm">.os-chamfer</span></div>
+        <div class="sg-cell"><div class="sg-swatch os-chamfer--lg" style="background-color: var(--color-brand-primary-surface); border:1px solid var(--color-border-brand);"></div><span class="os-text-sm">.os-chamfer--lg</span></div>
+      </div>
+      <p class="sg-spec" style="margin-top: var(--space-3);">The chamfer is the signature. Never apply it with a large radius on the same corner.</p>
+    </section>
+
+    <!-- ================= TOKENS: ELEVATION ================= -->
+    <section class="sg-section" id="tokens-elevation">
+      <div class="os-eyebrow"><span class="os-label">04 · Tokens</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Elevation</h2>
+      <p class="os-text-sm os-text-secondary os-measure" style="margin-bottom: var(--space-8);">
+        Elevation is a <strong>three-part</strong> system: surface step + border + shadow.
+        Shadow alone is insufficient in dark mode, so a shadow token must always be paired
+        with a surface change.
+      </p>
+      <div class="sg-grid-auto">
+        <div class="os-card os-card--elevated" style="box-shadow: var(--shadow-none);"><div class="os-card__body"><span class="os-text-sm">Shadow none</span><span class="sg-spec">flat, border only</span></div></div>
+        <div class="os-card os-card--elevated" style="box-shadow: var(--shadow-e1);"><div class="os-card__body"><span class="os-text-sm">--shadow-e1</span><span class="sg-spec">raised card, row hover</span></div></div>
+        <div class="os-card os-card--elevated" style="box-shadow: var(--shadow-e3);"><div class="os-card__body"><span class="os-text-sm">--shadow-e3</span><span class="sg-spec">dropdown, popover, menu</span></div></div>
+        <div class="os-card os-card--elevated" style="box-shadow: var(--shadow-e4);"><div class="os-card__body"><span class="os-text-sm">--shadow-e4</span><span class="sg-spec">modal, dialog, drawer</span></div></div>
+        <div class="os-card os-card--elevated" style="box-shadow: var(--shadow-glow);"><div class="os-card__body"><span class="os-text-sm">--shadow-glow</span><span class="sg-spec">one hero element, max</span></div></div>
+      </div>
+      <div class="sg-cell" style="margin-top: var(--space-6);">
+        <span class="os-text-sm">Focus ring — <code class="os-mono">--color-focus-ring</code></span>
+        <span class="sg-spec">5.45:1 light / 10.99:1 dark · outline only, never shifts layout · press Tab</span>
+        <div class="os-row os-row--tight">
+          <button class="os-btn os-btn--outline" type="button">Tab to me</button>
+          <input class="os-input" style="max-width:12rem" placeholder="and me" aria-label="focus demo" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FOUNDATION ================= -->
+    <section class="sg-section" id="c-foundation">
+      <div class="os-eyebrow"><span class="os-label">05 · Foundation</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Layout Primitives</h2>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-4);">Grid — 12 columns, collapses at 1024px and 768px</h3>
+      <div class="sg-grid-auto">
+        <div class="os-grid os-grid--3" style="width:100%;">
+          <div class="sg-cell">os-grid--3</div>
+          <div class="sg-cell">auto-fit</div>
+          <div class="sg-cell">min 18rem</div>
+        </div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Editorial Split — the signature asymmetry</h3>
+      <div class="os-split os-split--7-5">
+        <div class="sg-cell" style="min-height:6rem;"><span class="os-text-sm">7fr — primary narrative</span><span class="sg-spec">.os-split--7-5</span></div>
+        <div class="sg-cell" style="min-height:6rem;"><span class="os-text-sm">5fr — supporting meta</span><span class="sg-spec">collapses to 1 column &lt; 1024px</span></div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Container widths</h3>
+      <div class="sg-cell">
+        <div class="os-stack os-stack--tight">
+          <div><code class="os-mono os-text-sm">--container-narrow</code> <span class="sg-spec">45rem / 720px — long-form reading</span></div>
+          <div><code class="os-mono os-text-sm">--container-default</code> <span class="sg-spec">82.5rem / 1320px — primary page</span></div>
+          <div><code class="os-mono os-text-sm">--container-wide</code> <span class="sg-spec">100rem / 1600px — galleries, dashboard</span></div>
+          <div><code class="os-mono os-text-sm">--container-content</code> <span class="sg-spec">65ch — prose measure cap</span></div>
+        </div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Stack, Row, Divider, Eyebrow</h3>
+      <div class="os-stack os-stack--tight">
+        <div class="sg-cell"><span class="os-text-sm">.os-stack — vertical rhythm, gap from the spacing scale only</span></div>
+        <div class="os-row os-row--between">
+          <span class="os-text-sm">.os-row--between</span>
+          <span class="os-badge os-badge--brand">badge</span>
+        </div>
+      </div>
+      <hr class="os-divider" />
+      <div class="os-eyebrow"><span class="os-label">.os-eyebrow — label + rule, the section opener</span></div>
+      <hr class="os-divider os-divider--heavy" />
+      <hr class="os-divider os-divider--gradient" />
+    </section>
+
+    <!-- ================= BUTTONS ================= -->
+    <section class="sg-section" id="c-buttons">
+      <div class="os-eyebrow"><span class="os-label">06 · UI</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Buttons</h2>
+
+      <h3 class="os-label">Variants</h3>
+      <div class="os-row" style="margin-block: var(--space-3) var(--space-8);">
+        <button class="os-btn os-btn--primary" type="button">Primary — one per view</button>
+        <button class="os-btn os-btn--secondary" type="button">Secondary</button>
+        <button class="os-btn os-btn--accent" type="button">Accent</button>
+        <button class="os-btn os-btn--outline" type="button">Outline</button>
+        <button class="os-btn os-btn--ghost" type="button">Ghost</button>
+        <button class="os-btn os-btn--danger" type="button">Delete</button>
+        <button class="os-btn os-btn--danger-quiet" type="button">Remove</button>
+        <button class="os-btn os-btn--link" type="button">Link action</button>
+      </div>
+
+      <h3 class="os-label">Sizes — heights come from --control-height-*</h3>
+      <div class="os-row" style="margin-block: var(--space-3) var(--space-8);">
+        <button class="os-btn os-btn--outline os-btn--xs" type="button">XS 28px</button>
+        <button class="os-btn os-btn--outline os-btn--sm" type="button">SM 32px</button>
+        <button class="os-btn os-btn--outline" type="button">MD 40px default</button>
+        <button class="os-btn os-btn--outline os-btn--lg" type="button">LG 48px</button>
+        <button class="os-btn os-btn--primary os-btn--xl" type="button">XL 56px hero CTA</button>
+      </div>
+
+      <h3 class="os-label">States</h3>
+      <div class="os-row" style="margin-block: var(--space-3) var(--space-8);">
+        <button class="os-btn os-btn--primary" type="button">Default</button>
+        <button class="os-btn os-btn--primary" type="button" disabled>Disabled</button>
+        <button class="os-btn os-btn--primary is-loading" type="button">Loading</button>
+        <button class="os-btn os-btn--outline" type="button" aria-disabled="true">aria-disabled</button>
+      </div>
+
+      <h3 class="os-label">Icon buttons — always carry an accessible name</h3>
+      <div class="os-row" style="margin-block: var(--space-3) var(--space-4);">
+        <button class="os-icon-btn" type="button" aria-label="Settings">
+          <svg class="os-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+        </button>
+        <button class="os-icon-btn os-icon-btn--outline" type="button" aria-label="Outline icon button">
+          <svg class="os-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <button class="os-icon-btn os-icon-btn--sm" type="button" aria-label="Small icon button">
+          <svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+        <button class="os-icon-btn" type="button" aria-pressed="true" aria-label="Toggled on">
+          <svg class="os-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
+        </button>
+        <button class="os-icon-btn" type="button" aria-label="Disabled icon button" disabled>
+          <svg class="os-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <p class="sg-spec">
+        Icon buttons use <code class="os-mono">aria-pressed</code> for toggles and always need
+        an <code class="os-mono">aria-label</code>. A bare icon with no accessible name is a defect.
+      </p>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Button with icon + blocks</h3>
+      <div class="os-row">
+        <button class="os-btn os-btn--primary" type="button">
+          <svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          New project
+        </button>
+        <button class="os-btn os-btn--outline" type="button">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ================= BADGES & ICONS ================= -->
+    <section class="sg-section" id="c-badges">
+      <div class="os-eyebrow"><span class="os-label">07 · UI</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Badges, Avatars &amp; Icons</h2>
+
+      <div class="os-row" style="margin-block: var(--space-4) var(--space-8);">
+        <span class="os-badge">Neutral</span>
+        <span class="os-badge os-badge--brand">Brand</span>
+        <span class="os-badge os-badge--accent">Accent</span>
+        <span class="os-badge os-badge--success">Published</span>
+        <span class="os-badge os-badge--warning">Scheduled</span>
+        <span class="os-badge os-badge--danger">Failed</span>
+        <span class="os-badge os-badge--solid">Solid</span>
+        <span class="os-badge os-badge--sm">sm</span>
+        <span class="os-badge"><span class="os-dot"></span>With dot</span>
+      </div>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-3);">Technology badges — neutral by default</h3>
+      <div class="os-row" style="margin-bottom: var(--space-8);">
+        <span class="os-badge os-badge--tech">Laravel</span>
+        <span class="os-badge os-badge--tech">PostgreSQL</span>
+        <span class="os-badge os-badge--tech">Tailwind CSS 4</span>
+        <span class="os-badge os-badge--tech">Alpine.js</span>
+        <span class="os-badge os-badge--tech">Redis</span>
+      </div>
+      <p class="sg-spec" style="margin-bottom: var(--space-8);">
+        A stack of eight tech badges must not become a rainbow. Colour is reserved for status.
+      </p>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-3);">Avatars &amp; status dots</h3>
+      <div class="os-row" style="margin-bottom: var(--space-8);">
+        <span class="os-avatar os-avatar--sm">FT</span>
+        <span class="os-avatar">FT</span>
+        <span class="os-avatar os-avatar--lg">FT</span>
+        <span class="os-avatar os-avatar--xl">FT</span>
+        <span class="os-avatar os-avatar--square os-avatar--lg">FT</span>
+        <span class="os-badge os-badge--success"><span class="os-dot os-dot--pulse"></span>Available</span>
+        <span class="os-badge os-badge--warning"><span class="os-dot"></span>Limited</span>
+      </div>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-3);">Icon scale — Lucide geometry, 1.5px stroke, currentColor</h3>
+      <div class="os-row" style="margin-bottom: var(--space-3);">
+        <svg class="os-icon os-icon--xs" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--color-text-secondary);"><circle cx="12" cy="12" r="10"/></svg>
+        <svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--color-text-secondary);"><circle cx="12" cy="12" r="10"/></svg>
+        <svg class="os-icon" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--color-text-secondary);"><circle cx="12" cy="12" r="10"/></svg>
+        <svg class="os-icon os-icon--lg" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--color-text-secondary);"><circle cx="12" cy="12" r="10"/></svg>
+        <svg class="os-icon os-icon--xl" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--color-brand-primary-text);"><circle cx="12" cy="12" r="10"/></svg>
+        <svg class="os-icon os-icon--2xl" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--color-text-tertiary);"><circle cx="12" cy="12" r="10"/></svg>
+      </div>
+      <p class="sg-spec">12 / 16 / 20 / 24 / 32 / 40px. Icons always inherit colour — never hardcode a fill.</p>
+    </section>
+
+    <!-- ================= FORMS ================= -->
+    <section class="sg-section" id="c-forms">
+      <div class="os-eyebrow"><span class="os-label">08 · UI</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-2);">Forms</h2>
+      <p class="os-text-sm os-text-secondary os-measure" style="margin-bottom: var(--space-8);">
+        Every control boundary uses <code class="os-mono">--color-border-input</code>
+        (= <code class="os-mono">--color-border-strong</code>) so it clears WCAG 1.4.11 at 3:1.
+        Using <code class="os-mono">--color-border</code> on a form control is a defect.
+      </p>
+
+      <div class="os-grid" style="grid-template-columns: repeat(2, minmax(0,1fr));">
+        <div class="os-field">
+          <label class="os-field__label" for="sg-in-1">Project title <span class="os-field__required" aria-hidden="true">*</span></label>
+          <input class="os-input" id="sg-in-1" type="text" placeholder="e.g. Obsidian Signal" />
+          <span class="os-field__help">Shown as the page H1 and in OG metadata.</span>
+        </div>
+
+        <div class="os-field is-invalid">
+          <label class="os-field__label" for="sg-in-2">Slug <span class="os-field__optional">optional</span></label>
+          <input class="os-input" id="sg-in-2" type="text" value="Obsidian Signal" aria-invalid="true" aria-describedby="sg-in-2-err" />
+          <span class="os-field__error" id="sg-in-2-err">
+            <svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            Slug may only contain lowercase letters, numbers and hyphens.
+          </span>
+        </div>
+
+        <div class="os-field">
+          <label class="os-field__label" for="sg-in-3">Search</label>
+          <div class="os-input-group">
+            <svg class="os-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input class="os-input" id="sg-in-3" type="search" placeholder="Search projects…" />
+          </div>
+        </div>
+
+        <div class="os-field">
+          <label class="os-field__label" for="sg-in-4">Status</label>
+          <select class="os-select" id="sg-in-4">
+            <option>Draft</option><option>Published</option><option>Archived</option>
+          </select>
+        </div>
+
+        <div class="os-field">
+          <label class="os-field__label" for="sg-in-5">Excerpt</label>
+          <textarea class="os-textarea" id="sg-in-5" placeholder="Two to three sentences…"></textarea>
+        </div>
+
+        <div class="os-field">
+          <label class="os-field__label" for="sg-in-6">Disabled &amp; readonly</label>
+          <input class="os-input" id="sg-in-6" type="text" value="Disabled" disabled />
+          <input class="os-input" type="text" value="Read-only, inset surface" readonly />
+        </div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Checkbox, radio, toggle</h3>
+      <div class="os-grid" style="grid-template-columns: repeat(3, minmax(0,1fr));">
+        <div class="os-stack os-stack--snug">
+          <label class="os-check">
+            <input class="os-check__input" type="checkbox" checked />
+            <span class="os-check__body"><span>Published</span><span class="os-field__help">Visible on the public site.</span></span>
+          </label>
+          <label class="os-check">
+            <input class="os-check__input" type="checkbox" />
+            <span class="os-check__body"><span>Featured</span></span>
+          </label>
+          <label class="os-check">
+            <input class="os-check__input" type="checkbox" disabled />
+            <span class="os-check__body"><span>Archived (disabled)</span></span>
+          </label>
+        </div>
+        <div class="os-stack os-stack--snug">
+          <label class="os-check"><input class="os-check__input" type="radio" name="sg-r" checked /><span class="os-check__body"><span>Single</span></span></label>
+          <label class="os-check"><input class="os-check__input" type="radio" name="sg-r" /><span class="os-check__body"><span>Series</span></span></label>
+          <label class="os-check"><input class="os-check__input" type="radio" name="sg-r" /><span class="os-check__body"><span>Archive</span></span></label>
+        </div>
+        <div class="os-stack os-stack--snug">
+          <label class="os-toggle">
+            <input class="os-toggle__input" type="checkbox" checked />
+            <span class="os-toggle__track"></span>
+            <span class="os-text-sm">Publish immediately</span>
+          </label>
+          <label class="os-toggle">
+            <input class="os-toggle__input" type="checkbox" />
+            <span class="os-toggle__track"></span>
+            <span class="os-text-sm">Allow comments</span>
+          </label>
+          <label class="os-toggle">
+            <input class="os-toggle__input" type="checkbox" disabled />
+            <span class="os-toggle__track"></span>
+            <span class="os-text-sm">Disabled</span>
+          </label>
+        </div>
+      </div>
+
+      <fieldset class="os-fieldset" style="margin-top: var(--space-8);">
+        <legend class="os-fieldset__legend">Fieldset · SEO overrides</legend>
+        <div class="os-grid" style="grid-template-columns: repeat(2, minmax(0,1fr));">
+          <div class="os-field">
+            <label class="os-field__label" for="sg-seo-1">Meta title</label>
+            <input class="os-input" id="sg-seo-1" type="text" maxlength="60" />
+            <span class="os-field__help">60 characters maximum.</span>
+          </div>
+          <div class="os-field">
+            <label class="os-field__label" for="sg-seo-2">Canonical URL</label>
+            <input class="os-input" id="sg-seo-2" type="url" />
+          </div>
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- ================= CARDS & ALERTS ================= -->
+    <section class="sg-section" id="c-cards">
+      <div class="os-eyebrow"><span class="os-label">09 · UI</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Cards &amp; Alerts</h2>
+
+      <div class="os-grid os-grid--3" style="margin-bottom: var(--space-8);">
+        <article class="os-card">
+          <div class="os-card__media"><div class="sg-checker" style="aspect-ratio:16/10;"></div></div>
+          <div class="os-card__body">
+            <span class="os-label">Default</span>
+            <h3 class="os-heading-sm">Bordered surface</h3>
+            <p class="os-text-sm os-text-secondary">Elevation via surface step + border. No floating shadow box.</p>
+          </div>
+          <div class="os-card__footer"><span class="os-badge os-badge--success">Published</span></div>
+        </article>
+
+        <article class="os-card os-card--interactive">
+          <div class="os-card__body">
+            <span class="os-label">Interactive</span>
+            <h3 class="os-heading-sm">Hover lifts by --motion-lift</h3>
+            <p class="os-text-sm os-text-secondary">Transform is removed entirely under reduced-motion.</p>
+          </div>
+        </article>
+
+        <article class="os-card os-card--elevated">
+          <div class="os-card__header">
+            <h3 class="os-heading-sm" style="margin:0;">Elevated + header</h3>
+            <span class="os-badge os-badge--brand">v1</span>
+          </div>
+          <div class="os-card__body"><p class="os-text-sm os-text-secondary">Used for modals, popovers, and raised panels.</p></div>
+        </article>
+      </div>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-4);">Alerts — all five tones</h3>
+      <div class="os-stack os-stack--snug">
+        <div class="os-alert">
+          <svg class="os-icon os-alert__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div class="os-alert__body"><span class="os-alert__title">Info</span><span class="os-alert__description">Tokens carry both modes, so this alert needs no dark: variant.</span></div>
+        </div>
+        <div class="os-alert os-alert--success">
+          <svg class="os-icon os-alert__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+          <div class="os-alert__body"><span class="os-alert__title">Project published</span><span class="os-alert__description">Live at /work/obsidian-signal</span></div>
+        </div>
+        <div class="os-alert os-alert--warning">
+          <svg class="os-icon os-alert__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+          <div class="os-alert__body"><span class="os-alert__title">Unsaved changes</span><span class="os-alert__description">Two fields differ from the published version.</span></div>
+        </div>
+        <div class="os-alert os-alert--danger">
+          <svg class="os-icon os-alert__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+          <div class="os-alert__body">
+            <span class="os-alert__title">Upload rejected</span>
+            <span class="os-alert__description">File exceeds the 8 MB limit. Max dimension 4096px.</span>
+            <div class="os-alert__actions"><button class="os-btn os-btn--outline os-btn--sm" type="button">Try again</button></div>
+          </div>
+        </div>
+        <div class="os-alert os-alert--neutral">
+          <svg class="os-icon os-alert__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div class="os-alert__body"><span class="os-alert__title">Archived</span><span class="os-alert__description">This project is hidden from the public index.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= STATES ================= -->
+    <section class="sg-section" id="c-states">
+      <div class="os-eyebrow"><span class="os-label">10 · UI</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-2);">Loading, Empty &amp; Error States</h2>
+      <p class="os-text-sm os-text-secondary os-measure" style="margin-bottom: var(--space-8);">
+        Every async region must implement all three. A blank area is a defect, not a neutral state.
+      </p>
+
+      <div class="os-grid os-grid--3">
+        <div class="os-card">
+          <div class="os-card__body">
+            <span class="os-label">Loading</span>
+            <span class="os-skeleton os-skeleton--media"></span>
+            <span class="os-skeleton os-skeleton--title"></span>
+            <span class="os-skeleton os-skeleton--text"></span>
+            <span class="os-skeleton os-skeleton--text" style="width:70%;"></span>
+          </div>
+        </div>
+
+        <div class="os-empty-state">
+          <span class="os-empty-state__icon">
+            <svg class="os-icon os-icon--lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18v13H3z"/><path d="M3 7l2-4h14l2 4"/></svg>
+          </span>
+          <h3 class="os-empty-state__title">No projects yet</h3>
+          <p class="os-empty-state__description">Publish your first case study to populate this section.</p>
+          <button class="os-btn os-btn--primary os-btn--sm" type="button">Create project</button>
+        </div>
+
+        <div class="os-error-state">
+          <span class="os-error-state__icon">
+            <svg class="os-icon os-icon--lg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          </span>
+          <h3 class="os-error-state__title">Could not load</h3>
+          <p class="os-error-state__description">The media library did not respond. Request ID os-8f21c4.</p>
+          <button class="os-btn os-btn--outline os-btn--sm" type="button">Retry</button>
+        </div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Spinners &amp; progress</h3>
+      <div class="os-row">
+        <span class="os-spinner" role="status" aria-label="Loading"></span>
+        <span class="os-btn os-btn--outline is-loading" role="status">Saving</span>
+        <div style="flex:1 1 12rem; max-width:22rem;">
+          <div class="os-progress" role="progressbar" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"><div class="os-progress__bar" style="inline-size:64%;"></div></div>
+          <span class="sg-spec">os-progress · 64% — determinate upload / bulk jobs</span>
+        </div>
+        <div class="os-progress os-progress--meter" style="max-width:12rem;"><div class="os-progress__bar" style="inline-size:82%;"></div></div>
+      </div>
+    </section>
+
+    <!-- ================= NAVIGATION ================= -->
+    <section class="sg-section" id="c-nav">
+      <div class="os-eyebrow"><span class="os-label">11 · Navigation</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Navigation</h2>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-3);">Navbar — sticky, blurred default, solid modifier</h3>
+      <div style="border:1px solid var(--color-border); border-radius: var(--radius-md); overflow:hidden;">
+        <div class="os-navbar os-navbar--solid" style="border-radius:0;">
+          <div class="os-container os-container--wide os-navbar__inner">
+            <a class="os-navbar__brand" href="#c-nav">
+              <span class="os-dot" style="color: var(--color-brand-primary);"></span>
+              Obsidian Signal
+            </a>
+            <nav class="os-navbar__nav" aria-label="Demo">
+              <a class="os-nav-link os-nav-link--signal" href="#c-nav" aria-current="page">Work</a>
+              <a class="os-nav-link os-nav-link--signal" href="#c-nav">Writing</a>
+              <a class="os-nav-link" href="#c-nav">About</a>
+            </nav>
+            <div class="os-navbar__actions">
+              <button class="os-btn os-btn--outline os-btn--sm" type="button">Theme</button>
+              <button class="os-btn os-btn--primary os-btn--sm" type="button">Contact</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="sg-spec" style="margin-block: var(--space-3) var(--space-8);">
+        <code class="os-mono">aria-current="page"</code> drives the 2px brand underline through
+        <code class="os-mono">.os-nav-link--signal</code>.
+      </p>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-3);">Breadcrumb</h3>
+      <nav class="os-breadcrumb" aria-label="Breadcrumb">
+        <a class="os-breadcrumb__item" href="#c-nav">Home</a>
+        <span class="os-breadcrumb__sep" aria-hidden="true">/</span>
+        <a class="os-breadcrumb__item" href="#c-nav">Work</a>
+        <span class="os-breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="os-breadcrumb__item" aria-current="page">Obsidian Signal</span>
+      </nav>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-3);">Tabs</h3>
+      <div class="os-tabs">
+        <div class="os-tabs__list" role="tablist">
+          <button class="os-tab" role="tab" aria-selected="true">Overview</button>
+          <button class="os-tab" role="tab" aria-selected="false">Case study</button>
+          <button class="os-tab" role="tab" aria-selected="false">Gallery</button>
+          <button class="os-tab" role="tab" aria-selected="false">Meta</button>
+        </div>
+        <div class="os-tab__panel"><p class="os-text-sm os-text-secondary">Panel content. The tab strip scrolls horizontally rather than wrapping.</p></div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-3);">Pagination</h3>
+      <div class="os-pagination">
+        <span class="os-pagination__info">Showing 1–12 of 48 projects</span>
+        <div class="os-pagination__list">
+          <a class="os-page-link" href="#c-nav" aria-disabled="true">Prev</a>
+          <a class="os-page-link" href="#c-nav" aria-current="page">1</a>
+          <a class="os-page-link" href="#c-nav">2</a>
+          <a class="os-page-link" href="#c-nav">3</a>
+          <a class="os-page-link" href="#c-nav">4</a>
+          <a class="os-page-link" href="#c-nav">Next</a>
+        </div>
+      </div>
+      <p class="sg-spec" style="margin-top: var(--space-3);">Numbers are tabular so digit width never shifts between pages.</p>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-3);">Footer</h3>
+      <div style="border:1px solid var(--color-border); border-radius: var(--radius-md); overflow:hidden;">
+        <footer class="os-footer" style="border:0;">
+          <div class="os-container os-container--wide">
+            <div class="os-footer__grid">
+              <div>
+                <div class="os-footer__col-title">Obsidian Signal</div>
+                <p class="os-text-sm os-text-secondary" style="max-width:28ch;">Premium technology, built with Swiss editorial discipline.</p>
+              </div>
+              <div><div class="os-footer__col-title">Work</div><a class="os-footer__link" href="#c-nav">Projects</a><a class="os-footer__link" href="#c-nav">Writing</a></div>
+              <div><div class="os-footer__col-title">Studio</div><a class="os-footer__link" href="#c-nav">About</a><a class="os-footer__link" href="#c-nav">Contact</a></div>
+              <div><div class="os-footer__col-title">Elsewhere</div><a class="os-footer__link" href="#c-nav">GitHub</a><a class="os-footer__link" href="#c-nav">LinkedIn</a></div>
+            </div>
+            <div class="os-footer__bottom">
+              <span class="os-caption os-text-tertiary">© 2026 · All rights reserved</span>
+              <div class="os-social">
+                <a class="os-social__link" href="#c-nav" aria-label="GitHub"><svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg></a>
+                <a class="os-social__link" href="#c-nav" aria-label="LinkedIn"><svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></a>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </section>
+
+    <!-- ================= OVERLAYS ================= -->
+    <section class="sg-section" id="c-overlays">
+      <div class="os-eyebrow"><span class="os-label">12 · UI</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Overlays</h2>
+      <p class="os-text-sm os-text-secondary os-measure" style="margin-bottom: var(--space-6);">
+        Rendered inline so every layer is inspectable at once. In the product these are toggled
+        by Alpine, with a focus trap and Escape handling inside the Blade component.
+      </p>
+
+      <div class="os-grid" style="grid-template-columns: repeat(3, minmax(0,1fr)); align-items:start;">
+        <div class="os-card" style="overflow:visible;">
+          <div class="os-card__body">
+            <span class="os-label">Dropdown</span>
+            <div class="os-dropdown">
+              <button class="os-btn os-btn--outline os-btn--sm" type="button" aria-expanded="true">Actions</button>
+              <div class="os-menu os-menu--start os-menu--below" style="position:static; margin-top:var(--space-2);">
+                <div class="os-menu__label">Project</div>
+                <a class="os-menu__item" href="#c-overlays"><svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Edit</a>
+                <a class="os-menu__item" href="#c-overlays"><svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Duplicate</a>
+                <div class="os-menu__separator"></div>
+                <button class="os-menu__item os-menu__item--danger" type="button"><svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="os-card">
+          <div class="os-card__body">
+            <span class="os-label">Accordion</span>
+            <div class="os-accordion" style="border-top:0;">
+              <div class="os-accordion__item">
+                <button class="os-accordion__trigger" type="button" aria-expanded="true">
+                  Expanded item
+                  <svg class="os-icon os-accordion__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div class="os-accordion__panel">Panel content revealed on expand.</div>
+              </div>
+              <div class="os-accordion__item">
+                <button class="os-accordion__trigger" type="button" aria-expanded="false">
+                  Collapsed item
+                  <svg class="os-icon os-accordion__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="os-card">
+          <div class="os-card__body">
+            <span class="os-label">Tooltip &amp; toast</span>
+            <span class="os-has-tooltip" style="align-self:flex-start;">
+              <button class="os-btn os-btn--outline os-btn--sm" type="button" aria-describedby="sg-tip">Hover / focus me</button>
+              <span class="os-tooltip os-tooltip--visible" id="sg-tip" role="tooltip" style="top:calc(100% + 6px); left:0;">Token-driven tooltip surface</span>
+            </span>
+            <div class="os-toast" style="margin-top:var(--space-8);">
+              <span class="os-dot" style="color: var(--color-success); margin-top:6px;"></span>
+              <div>
+                <div class="os-toast__title">Saved</div>
+                <div class="os-toast__message">Project updated · 2s ago</div>
+              </div>
+            </div>
+            <div class="os-toast os-toast--danger" style="margin-top:var(--space-2);">
+              <span class="os-dot" style="color: var(--color-danger); margin-top:6px;"></span>
+              <div>
+                <div class="os-toast__title">Save failed</div>
+                <div class="os-toast__message">Network unavailable. Changes kept locally.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-3);">Modal &amp; destructive ConfirmationDialog</h3>
+      <div class="os-grid" style="grid-template-columns: repeat(2, minmax(0,1fr)); align-items:start;">
+        <div style="position:relative; height:21rem; border:1px solid var(--color-border); border-radius: var(--radius-md); overflow:hidden;">
+          <div class="os-modal" style="position:absolute; padding: var(--space-4);">
+            <div class="os-modal__backdrop" style="position:absolute;"></div>
+            <div class="os-modal__panel">
+              <div class="os-modal__header">
+                <div>
+                  <h4 class="os-modal__title">Publish project?</h4>
+                  <p class="os-modal__description">It becomes publicly visible immediately.</p>
+                </div>
+                <button class="os-icon-btn os-icon-btn--sm" type="button" aria-label="Close">
+                  <svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+              <div class="os-modal__body"><p class="os-text-sm os-text-secondary">Scheduled for 9 Nov 2026, 14:00.</p></div>
+              <div class="os-modal__footer">
+                <button class="os-btn os-btn--ghost" type="button">Cancel</button>
+                <button class="os-btn os-btn--primary" type="button">Publish</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:relative; height:21rem; border:1px solid var(--color-border); border-radius: var(--radius-md); overflow:hidden;">
+          <div class="os-modal" style="position:absolute; padding: var(--space-4);">
+            <div class="os-modal__backdrop" style="position:absolute;"></div>
+            <div class="os-modal__panel os-modal__panel--danger">
+              <div class="os-modal__header">
+                <div>
+                  <h4 class="os-modal__title">Delete “Obsidian Signal”?</h4>
+                  <p class="os-modal__description">This cannot be undone.</p>
+                </div>
+              </div>
+              <div class="os-modal__body">
+                <div class="os-alert os-alert--danger">
+                  <svg class="os-icon os-alert__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+                  <div class="os-alert__body"><span class="os-alert__description">3 media files and 2 articles reference this project.</span></div>
+                </div>
+              </div>
+              <div class="os-modal__footer">
+                <button class="os-btn os-btn--ghost" type="button">Cancel</button>
+                <button class="os-btn os-btn--danger" type="button">Delete permanently</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="sg-spec" style="margin-top: var(--space-3);">
+        Destructive dialogs use <code class="os-mono">.os-modal__panel--danger</code> — a 4px
+        danger rule is the only added signal. Never rely on colour alone: the button text states
+        the consequence.
+      </p>
+    </section>
+
+    <!-- ================= DATA TABLE ================= -->
+    <section class="sg-section" id="c-table">
+      <div class="os-eyebrow"><span class="os-label">13 · CMS</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Data Table</h2>
+
+      <div class="os-table-wrap">
+        <div class="os-toolbar">
+          <div class="os-toolbar__group">
+            <div class="os-input-group" style="max-width:16rem;">
+              <svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input class="os-input os-input--sm" type="search" placeholder="Search projects…" aria-label="Search projects" />
+            </div>
+          </div>
+          <div class="os-toolbar__group">
+            <select class="os-select os-select--sm" aria-label="Filter by status" style="width:auto;">
+              <option>All statuses</option><option>Published</option><option>Draft</option>
+            </select>
+            <input class="os-input os-input--sm" type="date" aria-label="Filter from date" style="width:auto;" />
+          </div>
+          <div class="os-toolbar__spacer"></div>
+          <span class="os-toolbar__selected">2 selected</span>
+          <button class="os-btn os-btn--danger-quiet os-btn--sm" type="button">Delete</button>
+          <button class="os-btn os-btn--primary os-btn--sm" type="button">New project</button>
+        </div>
+
+        <div class="os-table-scroll">
+          <table class="os-table">
+            <caption class="os-visually-hidden">Project list, sortable by title, status and views</caption>
+            <thead>
+              <tr>
+                <th style="width:2.5rem;">
+                  <input class="os-check__input" type="checkbox" aria-label="Select all rows" />
+                </th>
+                <th>Project</th>
+                <th>Status</th>
+                <th>Stack</th>
+                <th class="os-table__num">Views</th>
+                <th>Updated</th>
+                <th class="os-table__actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr aria-selected="true">
+                <td><input class="os-check__input" type="checkbox" checked aria-label="Select Obsidian Signal" /></td>
+                <td>
+                  <div class="os-stack os-stack--tight">
+                    <span>Obsidian Signal</span>
+                    <span class="sg-spec">/work/obsidian-signal</span>
+                  </div>
+                </td>
+                <td><span class="os-badge os-badge--success">Published</span></td>
+                <td><span class="os-badge os-badge--tech">Laravel</span></td>
+                <td class="os-table__num">12,480</td>
+                <td class="os-table__cell-muted">2 days ago</td>
+                <td class="os-table__actions">
+                  <button class="os-icon-btn os-icon-btn--sm" type="button" aria-label="Edit Obsidian Signal">
+                    <svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td><input class="os-check__input" type="checkbox" checked aria-label="Select Signal Atlas" /></td>
+                <td>
+                  <div class="os-stack os-stack--tight">
+                    <span>Signal Atlas</span>
+                    <span class="sg-spec">/work/signal-atlas</span>
+                  </div>
+                </td>
+                <td><span class="os-badge os-badge--warning">Scheduled</span></td>
+                <td><span class="os-badge os-badge--tech">PostgreSQL</span></td>
+                <td class="os-table__num">3,102</td>
+                <td class="os-table__cell-muted">5 days ago</td>
+                <td class="os-table__actions">
+                  <button class="os-icon-btn os-icon-btn--sm" type="button" aria-label="Edit Signal Atlas">
+                    <svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td><input class="os-check__input" type="checkbox" aria-label="Select Nomad Console" /></td>
+                <td>
+                  <div class="os-stack os-stack--tight">
+                    <span>Nomad Console</span>
+                    <span class="sg-spec">/work/nomad-console</span>
+                  </div>
+                </td>
+                <td><span class="os-badge">Draft</span></td>
+                <td><span class="os-badge os-badge--tech">Alpine.js</span></td>
+                <td class="os-table__num">—</td>
+                <td class="os-table__cell-muted">3 weeks ago</td>
+                <td class="os-table__actions">
+                  <button class="os-icon-btn os-icon-btn--sm" type="button" aria-label="Edit Nomad Console">
+                    <svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="sg-spec" style="margin-top: var(--space-3);">
+        Numeric columns use <code class="os-mono">.os-table__num</code> — right-aligned +
+        tabular figures. Header row is sticky inside
+        <code class="os-mono">.os-table-scroll</code>.
+      </p>
+    </section>
+
+    <!-- ================= PORTFOLIO ================= -->
+    <section class="sg-section" id="c-portfolio">
+      <div class="os-eyebrow"><span class="os-label">14 · Portfolio</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">Portfolio Components</h2>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-3);">Hero — asymmetric 7/5 editorial opener</h3>
+      <div style="border:1px solid var(--color-border); border-radius: var(--radius-md); overflow:hidden; position:relative;">
+        <div class="os-grid-overlay" aria-hidden="true"></div>
+        <div class="os-hero" style="padding-block: var(--space-12) var(--space-10); border:0;">
+          <div class="os-hero__inner">
+            <div>
+              <div class="os-eyebrow"><span class="os-label os-label--brand">// Available · Q1 2026</span></div>
+              <h3 class="os-display-lg os-hero__title">Engineering the <em>signal</em> inside the noise.</h3>
+              <p class="os-hero__lead">Full-stack systems and editorial-grade interfaces for teams who treat software as infrastructure rather than decoration.</p>
+              <div class="os-hero__actions">
+                <button class="os-btn os-btn--primary" type="button">View selected work</button>
+                <button class="os-btn os-btn--outline" type="button">Download CV</button>
+              </div>
+            </div>
+            <div class="os-hero__meta">
+              <div class="os-hero__stat"><span class="os-hero__stat-value">08</span><span class="os-hero__stat-label">Years shipping</span></div>
+              <div class="os-hero__stat"><span class="os-hero__stat-value">42</span><span class="os-hero__stat-label">Projects delivered</span></div>
+              <div class="os-hero__stat"><span class="os-hero__stat-value">99.9%</span><span class="os-hero__stat-label">Uptime maintained</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-10) var(--space-3);">ProjectCard — the signature list item</h3>
+      <a class="os-project-card" href="#c-portfolio" style="text-decoration:none;">
+        <div class="os-project-card__media">
+          <div class="sg-checker" style="height:100%;"></div>
+        </div>
+        <div class="os-project-card__body">
+          <span class="os-project-card__index">01 / 2026</span>
+          <h3 class="os-project-card__title">Obsidian Signal — portfolio &amp; CMS</h3>
+          <p class="os-project-card__summary">Laravel monolith with a token-driven design system, a sanitised rich-text pipeline, and a media library that converts uploads to WebP on write.</p>
+          <div class="os-project-card__stack">
+            <span class="os-badge os-badge--tech">Laravel 12</span>
+            <span class="os-badge os-badge--tech">Tailwind 4</span>
+            <span class="os-badge os-badge--tech">MySQL 8</span>
+            <span class="os-badge os-badge--tech">Alpine.js</span>
+          </div>
+          <div class="os-project-card__meta">
+            <span>Lead engineer</span><span>·</span><span>6 months</span><span>·</span><span>Shipped</span>
+          </div>
+        </div>
+      </a>
+
+      <h3 class="os-label" style="margin-block: var(--space-10) var(--space-3);">SkillGroup, ExpertiseCard, Experience timeline</h3>
+      <div class="os-grid os-grid--2">
+        <div class="os-card"><div class="os-card__body os-skill-group">
+          <span class="os-label">Backend</span>
+          <div class="os-skill">
+            <span class="os-skill__name">Laravel / PHP</span><span class="os-skill__level">Expert</span>
+            <div class="os-skill__meter os-progress os-progress--meter"><div class="os-progress__bar" style="inline-size:92%;"></div></div>
+          </div>
+          <div class="os-skill">
+            <span class="os-skill__name">PostgreSQL</span><span class="os-skill__level">Advanced</span>
+            <div class="os-skill__meter os-progress os-progress--meter"><div class="os-progress__bar" style="inline-size:78%;"></div></div>
+          </div>
+          <div class="os-skill">
+            <span class="os-skill__name">Redis / queues</span><span class="os-skill__level">Advanced</span>
+            <div class="os-skill__meter os-progress os-progress--meter"><div class="os-progress__bar" style="inline-size:71%;"></div></div>
+          </div>
+        </div></div>
+
+        <div class="os-card"><div class="os-expertise-card">
+          <span class="os-expertise-card__icon">
+            <svg class="os-icon os-icon--lg" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>
+          </span>
+          <h4 class="os-heading-sm" style="margin:0;">Product engineering</h4>
+          <p class="os-text-sm os-text-secondary">From schema to shipped interface, with the boring parts done properly.</p>
+          <ul class="os-expertise-card__deliverables">
+            <li><svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--color-brand-primary-text);"><path d="m5 13 4 4L19 7"/></svg> Architecture &amp; data modelling</li>
+            <li><svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--color-brand-primary-text);"><path d="m5 13 4 4L19 7"/></svg> Design system implementation</li>
+            <li><svg class="os-icon os-icon--sm" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--color-brand-primary-text);"><path d="m5 13 4 4L19 7"/></svg> Performance &amp; accessibility budgets</li>
+          </ul>
+        </div></div>
+      </div>
+
+      <div class="os-card" style="margin-top: var(--space-4);"><div class="os-card__body">
+        <span class="os-label">Experience timeline</span>
+        <div class="os-exp-item">
+          <div class="os-exp-item__period">2023 — Present</div>
+          <div>
+            <div class="os-exp-item__role">Lead Full-Stack Engineer</div>
+            <div class="os-exp-item__company">Independent / Contract</div>
+            <ul class="os-exp-item__achievements">
+              <li>Cut p95 page load from 3.1s to 0.8s by replacing an SPA shell with server-rendered Blade.</li>
+              <li>Introduced a token-driven design system that removed four divergent button implementations.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="os-exp-item" style="border-bottom:0;">
+          <div class="os-exp-item__period">2020 — 2023</div>
+          <div>
+            <div class="os-exp-item__role">Backend Engineer</div>
+            <div class="os-exp-item__company">Series-A SaaS</div>
+            <ul class="os-exp-item__achievements">
+              <li>Owned the billing and webhook pipeline handling roughly 40k events per day.</li>
+            </ul>
+          </div>
+        </div>
+      </div></div>
+
+      <h3 class="os-label" style="margin-block: var(--space-10) var(--space-3);">Terminal widget &amp; Architecture diagram</h3>
+      <div class="os-grid os-grid--2">
+        <div class="os-terminal">
+          <div class="os-terminal__bar">
+            <div class="os-terminal__dots" aria-hidden="true"><span class="os-terminal__dot"></span><span class="os-terminal__dot"></span><span class="os-terminal__dot"></span></div>
+            <span class="os-terminal__title">fadil@obsidian — zsh</span>
+          </div>
+          <pre class="os-terminal__body"><span class="os-terminal__prompt">$</span> <span class="os-terminal__key">php</span> artisan about
+<span class="os-terminal__comment"># Environment</span>
+  Application ...... <span class="os-terminal__value">Portfolio / CMS</span>
+  Laravel .......... <span class="os-terminal__value">12.x</span>
+  PHP .............. <span class="os-terminal__value">8.4.27</span>
+  Database ......... <span class="os-terminal__value">mysql 8.0</span>
+<span class="os-terminal__prompt">$</span> <span class="os-terminal__cursor"></span></pre>
+        </div>
+
+        <div class="os-card"><div class="os-card__body">
+          <span class="os-label">Request lifecycle</span>
+          <div class="os-stack os-stack--tight os-stack--center">
+            <div class="os-arch-node os-arch-node--brand" style="width:100%;">HTTP · Blade view</div>
+            <div class="os-arch-connector"></div>
+            <div class="os-arch-node" style="width:100%;">Controller · orchestration only</div>
+            <div class="os-arch-connector"></div>
+            <div class="os-arch-node" style="width:100%;">Action · one use case</div>
+            <div class="os-arch-connector"></div>
+            <div class="os-arch-node" style="width:100%;">Eloquent · persistence</div>
+          </div>
+        </div></div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: var(--space-10) var(--space-3);">Data visualisation — bars only</h3>
+      <div class="os-card"><div class="os-card__body">
+        <div class="os-chart-bars">
+          <div class="os-chart-bar"><span class="os-chart-bar__label">Backend</span><div class="os-chart-bar__track"><div class="os-chart-bar__fill" style="inline-size:92%;"></div></div><span class="os-chart-bar__value">92</span></div>
+          <div class="os-chart-bar"><span class="os-chart-bar__label">Frontend</span><div class="os-chart-bar__track"><div class="os-chart-bar__fill" style="inline-size:84%;"></div></div><span class="os-chart-bar__value">84</span></div>
+          <div class="os-chart-bar"><span class="os-chart-bar__label">Infrastructure</span><div class="os-chart-bar__track"><div class="os-chart-bar__fill" style="inline-size:71%;"></div></div><span class="os-chart-bar__value">71</span></div>
+          <div class="os-chart-bar"><span class="os-chart-bar__label">Design systems</span><div class="os-chart-bar__track"><div class="os-chart-bar__fill os-chart-bar__fill--secondary" style="inline-size:66%;"></div></div><span class="os-chart-bar__value">66</span></div>
+        </div>
+      </div></div>
+      <p class="sg-spec" style="margin-top: var(--space-3);">
+        Horizontal bars are the only sanctioned chart form. No pies, no donuts, no 3D, and no
+        decorative gradients under data.
+      </p>
+    </section>
+
+    <!-- ================= CMS ================= -->
+    <section class="sg-section" id="c-cms">
+      <div class="os-eyebrow"><span class="os-label">15 · CMS</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-6);">CMS Components</h2>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-4);">Dashboard metrics</h3>
+      <div class="os-grid os-grid--4" style="margin-bottom: var(--space-8);">
+        <div class="os-metric">
+          <span class="os-metric__label">Published projects</span>
+          <span class="os-metric__value">18</span>
+          <span class="os-metric__delta os-metric__delta--up">▲ 3 this month</span>
+        </div>
+        <div class="os-metric">
+          <span class="os-metric__label">Unread messages</span>
+          <span class="os-metric__value">07</span>
+          <span class="os-metric__delta os-metric__delta--flat">— no change</span>
+        </div>
+        <div class="os-metric">
+          <span class="os-metric__label">Media library</span>
+          <span class="os-metric__value">1.4<span class="os-caption"> GB</span></span>
+          <span class="os-metric__delta os-metric__delta--up">▲ 120 MB</span>
+        </div>
+        <div class="os-metric">
+          <span class="os-metric__label">Failed jobs</span>
+          <span class="os-metric__value">02</span>
+          <span class="os-metric__delta os-metric__delta--down">▼ needs attention</span>
+        </div>
+      </div>
+
+      <h3 class="os-label" style="margin-block: 0 var(--space-4);">Media upload, picker &amp; preview</h3>
+      <div class="os-grid os-grid--2" style="margin-bottom: var(--space-8);">
+        <div class="os-dropzone" role="button" tabindex="0" aria-label="Upload media">
+          <svg class="os-icon os-icon--xl" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M20 17v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"/></svg>
+          <span class="os-text-sm">Drop files here or click to browse</span>
+          <span class="os-dropzone__hint">JPG, PNG, WebP, AVIF · max 8 MB · max 4096px</span>
+        </div>
+
+        <div class="os-stack os-stack--snug">
+          <div class="os-upload-item">
+            <div class="os-upload-item__thumb sg-checker"></div>
+            <div class="os-upload-item__body">
+              <span class="os-upload-item__name">hero-obsidian-signal.webp</span>
+              <span class="os-upload-item__meta">482 KB · 2400×1500 · WebP</span>
+              <div class="os-progress os-progress--meter" style="margin-top:var(--space-1);"><div class="os-progress__bar" style="inline-size:100%;"></div></div>
+            </div>
+            <span class="os-badge os-badge--success">Done</span>
+          </div>
+          <div class="os-upload-item">
+            <div class="os-upload-item__thumb sg-checker"></div>
+            <div class="os-upload-item__body">
+              <span class="os-upload-item__name">case-study-cover.png</span>
+              <span class="os-upload-item__meta">1.9 MB · converting to WebP…</span>
+              <div class="os-progress os-progress--meter" style="margin-top:var(--space-1);"><div class="os-progress__bar" style="inline-size:58%;"></div></div>
+            </div>
+            <span class="os-spinner" role="status" aria-label="Converting"></span>
+          </div>
+          <div class="os-upload-item">
+            <div class="os-upload-item__thumb sg-checker"></div>
+            <div class="os-upload-item__body">
+              <span class="os-upload-item__name">logo-source.tiff</span>
+              <span class="os-upload-item__meta">9.4 MB · exceeds limit</span>
+            </div>
+            <span class="os-badge os-badge--danger">Rejected</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="os-media-grid" style="margin-bottom: var(--space-8);">
+        <div class="os-media-tile" aria-selected="true" role="button" tabindex="0"><div class="sg-checker" style="height:100%;"></div><span class="os-media-tile__caption">Selected</span></div>
+        <div class="os-media-tile" role="button" tabindex="0"><div class="sg-checker" style="height:100%;"></div><span class="os-media-tile__caption">hero-01.webp</span></div>
+        <div class="os-media-tile" role="button" tabindex="0"><div class="sg-checker" style="height:100%;"></div><span class="os-media-tile__caption">detail-02.webp</span></div>
+        <div class="os-media-tile" role="button" tabindex="0"><div class="sg-checker" style="height:100%;"></div><span class="os-media-tile__caption">diagram.svg</span></div>
+        <div class="os-media-tile" role="button" tabindex="0"><div class="sg-checker" style="height:100%;"></div><span class="os-media-tile__caption">og-default.webp</span></div>
+      </div>
+    </section>
+
+    <!-- ================= TIMELINE / PROSE ================= -->
+    <section class="sg-section" id="c-cms-2">
+      <h3 class="os-label" style="margin-block: 0 var(--space-4);">Activity timeline</h3>
+      <div class="os-card"><div class="os-card__body">
+        <div class="os-timeline">
+          <div class="os-timeline__item os-timeline__item--brand">
+            <span class="os-timeline__marker"></span>
+            <div class="os-timeline__body">
+              <span class="os-timeline__text">Published <strong>Obsidian Signal</strong></span>
+              <span class="os-timeline__meta">fadil · 2 days ago · 14:02</span>
+            </div>
+          </div>
+          <div class="os-timeline__item os-timeline__item--success">
+            <span class="os-timeline__marker"></span>
+            <div class="os-timeline__body">
+              <span class="os-timeline__text">Uploaded 4 media files to Work / 2026</span>
+              <span class="os-timeline__meta">fadil · 2 days ago · 13:48</span>
+            </div>
+          </div>
+          <div class="os-timeline__item os-timeline__item--danger">
+            <span class="os-timeline__marker"></span>
+            <div class="os-timeline__body">
+              <span class="os-timeline__text">Rejected <code class="os-mono">logo-source.tiff</code> — exceeds 8 MB</span>
+              <span class="os-timeline__meta">system · 2 days ago · 13:47</span>
+            </div>
+          </div>
+        </div>
+      </div></div>
+
+      <h3 class="os-label" style="margin-block: var(--space-8) var(--space-4);">Rich text — sanitised editor output</h3>
+      <div class="os-card"><div class="os-card__body">
+        <div class="os-prose">
+          <p>Rich text is sanitised on write <em>and</em> on render. The editor is headless, so the stored HTML is a data contract rather than a vendor format.</p>
+          <h2>Measure caps at 65ch</h2>
+          <p>Long-form reading uses <code>--container-content</code> so line length never becomes a liability:</p>
+          <ul>
+            <li>Sanitisation happens in the Action layer, not the controller.</li>
+            <li>Inline <code>code</code> carries the brand colour at full contrast.</li>
+          </ul>
+          <blockquote>A pull-quote is one of only two sanctioned uses of the editorial serif.</blockquote>
+          <pre><code>// tokens are the contract
+--color-surface: light-dark(#FFFFFF, #12161C);</code></pre>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- ================= SIGNATURE DEVICES ================= -->
+    <section class="sg-section" id="c-signature">
+      <div class="os-eyebrow"><span class="os-label">16 · Signature</span></div>
+      <h2 class="os-heading-lg" style="margin-block: var(--space-3) var(--space-2);">Signature Devices</h2>
+      <p class="os-text-sm os-text-secondary os-measure" style="margin-bottom: var(--space-8);">
+        These four devices are what make the design recognisable instead of generic. They are
+        the only permitted decorative layer — anything else is noise.
+      </p>
+
+      <div class="os-grid os-grid--2">
+        <div class="os-card"><div class="os-card__body">
+          <span class="os-label">1 · Signal rule</span>
+          <div class="os-signal-rule"></div>
+          <p class="os-text-sm os-text-secondary">A 4px brand rule with tick marks, opening a major section. One per section, never more.</p>
+        </div></div>
+
+        <div class="os-card"><div class="os-card__body">
+          <span class="os-label">2 · Chamfer</span>
+          <div class="os-chamfer" style="background: var(--color-brand-primary-surface); border: 1px solid var(--color-border-brand); height: 5rem;"></div>
+          <p class="os-text-sm os-text-secondary">The neo-industrial notched corner. Never combined with a large radius on the same corner.</p>
+        </div></div>
+
+        <div class="os-card" style="position:relative; overflow:hidden;"><div class="os-grid-overlay" aria-hidden="true"></div><div class="os-card__body" style="position:relative;">
+          <span class="os-label">3 · Grid overlay</span>
+          <p class="os-text-sm os-text-secondary">Technical atmosphere behind hero and diagram sections. 4.5% opacity ceiling, masked with a radial fade, always <code class="os-mono">aria-hidden</code>.</p>
+        </div></div>
+
+        <div class="os-card"><div class="os-card__body">
+          <span class="os-label">4 · Grain</span>
+          <div class="sg-checker" style="height:5rem; border-radius: var(--radius-sm);"></div>
+          <p class="os-text-sm os-text-secondary">Fixed film grain across the whole page at 3.5% opacity, applied once on the root wrapper via <code class="os-mono">.os-grain</code>.</p>
+        </div></div>
+      </div>
+
+      <div class="os-card" style="margin-top: var(--space-6);"><div class="os-card__body">
+        <span class="os-label">Anti-generic checklist</span>
+        <div class="os-grid os-grid--2" style="margin-top: var(--space-2);">
+          <div class="os-stack os-stack--tight">
+            <span class="os-text-sm os-text-danger">Banned outright</span>
+            <span class="os-text-sm os-text-secondary">Purple-blue AI gradients · glassmorphism everywhere · emoji as icons · floating blob backgrounds · centred hero with a three-word slogan · pill radius on everything · stock illustrations</span>
+          </div>
+          <div class="os-stack os-stack--tight">
+            <span class="os-text-sm os-text-success">Required instead</span>
+            <span class="os-text-sm os-text-secondary">Asymmetric editorial splits (7/5, 8/4) · mono micro-labels as engineering signal · oversized serif index numerals · real content over placeholder prose · one accent moment per viewport</span>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <footer class="os-section os-section--compact">
+      <hr class="os-divider" />
+      <p class="os-caption os-text-tertiary">
+        OBSIDIAN SIGNAL · Component Showcase · verifies
+        <code class="os-mono">design-tokens.css</code> + <code class="os-mono">components.css</code>.
+        Internal artefact — must not be deployed to production.
+      </p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    var state = document.getElementById('theme-state');
+
+    function current() { return root.getAttribute('data-theme') || 'system'; }
+
+    function label() {
+      var t = current();
+      var resolved = t === 'system'
+        ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light (from OS)' : 'dark (from OS)')
+        : t;
+      state.textContent = 'mode: ' + resolved;
+    }
+
+    function set(theme) {
+      if (theme === 'system') {
+        root.removeAttribute('data-theme');
+        try { localStorage.removeItem('os-theme'); } catch (e) {}
+      } else {
+        root.setAttribute('data-theme', theme);
+        try { localStorage.setItem('os-theme', theme); } catch (e) {}
+      }
+      label();
+    }
+
+    btn.addEventListener('click', function () {
+      var order = ['system', 'dark', 'light'];
+      set(order[(order.indexOf(current()) + 1) % order.length]);
+    });
+
+    label();
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', label);
+  })();
+</script>
+
+</body>
+</html>

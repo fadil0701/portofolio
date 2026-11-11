@@ -1,0 +1,118 @@
+/* ============================================================================
+   OBSIDIAN SIGNAL — APPLICATION STYLESHEET ENTRY POINT
+   Consumed by Vite as the single CSS entry point for all Blade views.
+   (Do not write a glob path containing an asterisk-slash pair in this header:
+    it would terminate the comment early and expose the prose below as CSS.)
+
+   INTEGRATION CONTRACT WITH TAILWIND CSS 4
+   ========================================
+   Division of responsibility — deliberate, must not be blurred:
+
+     design-tokens.css   = the design system. ALL colour, type, radius,
+                           elevation, motion, z-index. Mode-aware via light-dark().
+     components.css      = the component contract. Semantic `.os-*` classes whose
+                           anatomy (height, padding, focus, disabled) is fixed.
+     Tailwind utilities  = LAYOUT & COMPOSITION. flex/grid/gap/order, spacing,
+                           responsive variants (md:), state variants (hover:).
+
+   WHY colours/types/radii ARE NOT exposed as Tailwind utilities
+   ------------------------------------------------------------
+   Tailwind's @theme namespace IS `--color-*`, `--radius-*`, `--font-*`,
+   `--text-*`, `--shadow-*` — the exact names our canonical tokens own.
+   Writing `@theme inline { --color-surface: var(--color-surface); }` emits
+   `--color-surface: var(--color-surface)` into :root. That is self-referential,
+   resolves as *guaranteed-invalid*, and would silently blank every colour in the
+   product. Renaming either side purely to win a naming argument is worse.
+
+   So we CLEAR those namespaces instead. That has a second, larger benefit:
+   `bg-blue-500`, `text-gray-400` and a drifting `rounded-lg` become impossible —
+   Tailwind's default palette cannot leak into the design. Every colour decision
+   must route through a token or an `.os-*` class, so design drift is prevented
+   structurally rather than merely discouraged.
+
+   SPACING IS INTENTIONALLY LEFT ALIGNED
+   -------------------------------------
+   Tailwind's default spacing scale is --spacing: 0.25rem — a 4px base. Our
+   --space-* scale is also a 4px base with identical multiples
+   (p-4 == --space-4 == 1rem). The two agree by construction, so Tailwind
+   spacing/size/inset utilities are safe to use freely.
+   ========================================================================= */
+
+@import 'tailwindcss';
+@import './design-tokens.css';
+@import './components.css';
+
+@source "../views";
+@source "../js";
+
+/* --------------------------------------------------------------------------
+   1. CLEAR COLLIDING DEFAULT NAMESPACES
+   Removes ~250 default colour utilities plus the default radius/type/shadow/
+   font scales. If a colour is needed it comes from a token, never a palette.
+   -------------------------------------------------------------------------- */
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --ease-*: initial;
+  --animate-*: initial;
+  --tracking-*: initial;
+  --leading-*: initial;
+}
+
+/* --------------------------------------------------------------------------
+   2. FONT BRIDGE
+   Kept deliberately minimal. Each entry is a real alias, never a duplicate.
+   -------------------------------------------------------------------------- */
+@theme inline {
+  /* Font families -> `font-sans` / `font-mono` / `font-editorial`.
+     These names do not exist as canonical tokens (canonical are --font-display,
+     --font-body, --font-mono, --font-editorial), so the only collision risk is
+     --font-mono; it is resolved by pointing both at the same stack. */
+  --font-sans:      'Geist Variable', 'Geist', ui-sans-serif, system-ui, 'Segoe UI', Arial, sans-serif;
+  --font-mono:      'Geist Mono Variable', 'Geist Mono', ui-monospace, 'JetBrains Mono', Consolas, monospace;
+  --font-editorial: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+}
+
+/* --------------------------------------------------------------------------
+   3. DARK MODE VARIANT
+   Every colour token already carries both modes via light-dark(), so the
+   `dark:` variant should almost never be needed. It exists only for
+   mode-specific non-colour adjustments (e.g. shadow geometry). Any usage must
+   be documented with the reason.
+   -------------------------------------------------------------------------- */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* --------------------------------------------------------------------------
+   4. TAILWIND PREFLIGHT CORRECTIONS
+   Preflight resets element styles; two of its resets fight the design system.
+   -------------------------------------------------------------------------- */
+@layer base {
+  /* Preflight sets buttons to cursor:default. Interactive affordance wins. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
+  /* Preflight strips heading weights; provide a token-driven fallback so bare
+     semantic headings (h1-h6) render correctly inside .os-prose. */
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+    text-wrap: balance;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. SHARED TIMING
+   Tailwind's transition utilities read --default-transition-duration. Point it
+   at the token scale so utilities and components share one timing language.
+   -------------------------------------------------------------------------- */
+:root {
+  --default-transition-duration: var(--duration-normal);
+  --default-transition-timing-function: var(--ease-standard);
+}
